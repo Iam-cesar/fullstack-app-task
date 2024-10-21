@@ -1,0 +1,28 @@
+version: "3.5"
+
+services:
+  api:
+    build: ./task-api
+    volumes:
+      - ./task-api:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "${API_PORT}:3000"
+    command: npm run ${API_COMMAND}
+    networks:
+      - app-network
+
+  ui:
+    build: ./task-ui
+    volumes:
+      - ./task-ui:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "${UI_PORT}:4200"
+    command: npm run ${UI_COMMAND} --host 0.0.0.0
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
