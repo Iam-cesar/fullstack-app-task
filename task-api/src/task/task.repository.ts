@@ -33,11 +33,11 @@ export default class TaskRepository implements IRead<Task>, IWrite<Task> {
       try {
         const dataWithId = this.appendRandomUUID(createDto);
         const data = await this.readFile();
-        this.writeFile(data, dataWithId);
+        await this.writeFile(data, dataWithId);
       } catch (readError) {
         console.log('🚀 ~ readError:', readError);
         if (readError.code !== 'ENOENT') {
-          throw readError;
+          return readError;
         }
       }
 
