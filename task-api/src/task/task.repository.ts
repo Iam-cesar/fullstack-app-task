@@ -4,22 +4,20 @@ import { IWrite } from 'src/database/interfaces/write.interface';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
-import { NotFoundException } from '@nestjs/common';
 import { readFile, writeFile } from 'fs/promises';
 import * as path from 'path';
+import RepositoryResponse from 'src/utils/repositoryResponse';
 import { Task } from './entities/task.entity';
 
 const DB_FILE_PATH = path.resolve(__dirname, '../database/task.db.json');
 
 export default class TaskRepository implements IRead<Task>, IWrite<Task> {
+  constructor(private readonly repositoryResponse: RepositoryResponse<Task>) {}
   private async readFile() {
     return JSON.parse(await readFile(DB_FILE_PATH, 'utf-8'));
   }
 
-  private async writeFile(data, newData: Task) {
-    const hasTaskContent = !!data?.tasks;
-    if (!hasTaskContent) data = { ...data, tasks: [] };
-    data.tasks.push(newData);
+  private async writeFile(data): Promise<void> {
     await writeFile(DB_FILE_PATH, JSON.stringify(data));
   }
 
@@ -28,51 +26,64 @@ export default class TaskRepository implements IRead<Task>, IWrite<Task> {
     return { ...createDto, id };
   }
 
-  async create(createDto: CreateTaskDto): Promise<string> {
+  async create(createDto: CreateTaskDto): Promise<RepositoryResponse<Task>> {
     try {
-      try {
-        const dataWithId = this.appendRandomUUID(createDto);
-        const data = await this.readFile();
-        await this.writeFile(data, dataWithId);
-      } catch (readError) {
-        console.log('🚀 ~ readError:', readError);
-        if (readError.code !== 'ENOENT') {
-          return readError;
-        }
-      }
-
-      return 'success';
+      const dataWithId = this.appendRandomUUID(createDto);
+      let data = await this.readFile();
+      const hasTaskContent = !!data?.tasks;
+      if (!hasTaskContent) data = { ...data, tasks: [] };
+      data.tasks.push(dataWithId);
+      await this.writeFile(data);
+      return RepositoryResponse.create<Task>(null, null, null);
     } catch (error) {
       console.log('🚀 ~ error:', error);
-      return 'failure';
+      return RepositoryResponse.create<Task>(error, error.message, null);
     }
   }
 
-  async update(id: UUID, updateDTO: UpdateTaskDto): Promise<Task> {
-    throw new Error('Method not implemented.');
-  }
-
-  async findAll(): Promise<Task[]> {
-    throw new Error('Method not implemented.');
-  }
-
-  async findOne(id: UUID): Promise<Task | null> {
+  async update(
+    id: UUID,
+    updateDTO: UpdateTaskDto,
+  ): Promise<RepositoryResponse<Task>> {
     try {
       const data = await this.readFile();
-      if (!data?.tasks)
-        throw new NotFoundException(
-          `Tarefa ${id} não foi encontrada ou não existe`,
-        );
-
-      const tasks = data.tasks.filter((task) => task.id === id);
-      return tasks?.[0] ?? null;
+      const selectedTask: Task[] = data.filter((task: Task) => task.id === id);
+      const taskAtIndexZero = selectedTask?.[0];
+      if (!taskAtIndexZero) return null;
+      const taskUpdated = { ...taskAtIndexZero, ...updateDTO };
+      return RepositoryResponse.create<Task>(null, null, taskUpdated);
     } catch (error) {
-      console.log('🚀 ~ error:', error);
-      return null;
+      return RepositoryResponse.create<Task>(error, error.message, null);
     }
   }
 
-  async remove(id: UUID): Promise<string> {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<RepositoryResponse<Task[]>> {
+    try {
+      const allTasks = await this.readFile();
+      return RepositoryResponse.create<Task[]>(null, null, allTasks);
+    } catch (error) {
+      return RepositoryResponse.create<Task[]>(error, error.message, []);
+    }
+  }
+
+  async findOne(id: UUID): Promise<RepositoryResponse<Task>> {
+    try {
+      const data = await this.readFile();
+      const tasks = data.tasks.filter((task: Task) => task.id === id);
+      return RepositoryResponse.create<Task>(null, null, tasks?.[0]);
+    } catch (error) {
+      return RepositoryResponse.create<Task>(error, error.message, null);
+    }
+  }
+
+  async remove(id: UUID): Promise<RepositoryResponse<Task>> {
+    try {
+      const tasks = await this.readFile();
+      tasks.filter((task: Task) => task.id !== id);
+      await this.writeFile(tasks);
+      return RepositoryResponse.create<Task>(null, null, tasks);
+    } catch (error) {
+      return RepositoryResponse.create<Task>(error, error.message, null);
+    }
   }
 }
