@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RepositoryResponseInterface } from './repositoryResponse.interface';
+import { RepositoryResponseInterface } from './repository-response.interface';
 
 @Injectable()
 export default class RepositoryResponseImpl<T>

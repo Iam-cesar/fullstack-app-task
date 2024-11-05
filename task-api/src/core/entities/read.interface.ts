@@ -1,5 +1,5 @@
 import { UUID } from 'crypto';
-import { RepositoryResponseInterface } from '../../infrastructure/gateways/repositoryResponse.interface';
+import { RepositoryResponseInterface } from '../../infrastructure/gateways/repository-response.interface';
 
 export interface IRead<T> {
   findAll(): Promise<RepositoryResponseInterface<T[]>>;

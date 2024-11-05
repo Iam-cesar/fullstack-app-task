@@ -6,13 +6,12 @@ import { readFile, writeFile } from 'fs/promises';
 import * as path from 'path';
 
 import { Injectable } from '@nestjs/common';
-import { RepositoryResponseInterface } from '../../infrastructure/gateways/repositoryResponse.interface';
+import { RepositoryResponseInterface } from '../../infrastructure/gateways/repository-response.interface';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from './task.repository.interface';
 
 const DB_FILE_PATH = path.resolve(__dirname, '../database/task.db.json');
 
-@Injectable()
 export default class TaskRepositoryImpl implements TaskRepository {
   constructor(
     private readonly repositoryResponse: RepositoryResponseInterface<Task>,
