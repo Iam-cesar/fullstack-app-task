@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { RepositoryResponseInterface } from './repositoryResponse.interface';
 
 @Injectable()
-export default class RepositoryResponse<T> {
+export default class RepositoryResponseImpl<T>
+  implements RepositoryResponseInterface<T>
+{
   private readonly message: string | null;
   private readonly data: T | null;
   private readonly error: Error | null;
@@ -14,11 +17,7 @@ export default class RepositoryResponse<T> {
     this.hasError = !!error;
   }
 
-  static create<T>(
-    error: Error,
-    message: string,
-    data: T,
-  ): RepositoryResponse<T> {
-    return new RepositoryResponse(error, message, data);
+  create<T>(error: Error, message: string, data: T): RepositoryResponseInterface<T> {
+    return new RepositoryResponseImpl(error, message, data);
   }
 }

@@ -2,18 +2,20 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, Injectable,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { UUID } from 'crypto';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
-import { TaskService } from './task.service';
+import { CRUD } from '../../../core/entities/crud.interface';
+import { CreateTaskDto } from '../../dto/create-task.dto';
+import { UpdateTaskDto } from '../../dto/update-task.dto';
+import { Task } from '../../entities/task.entity';
+import { TaskService } from '../../usecases/task.service.interface';
 
 @Controller('task')
-export class TaskController {
+export class TaskController implements CRUD<Task> {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()

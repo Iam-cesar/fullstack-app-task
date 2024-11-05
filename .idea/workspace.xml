@@ -1,4 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PropertiesComponent">{}</component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f29f455d-f2c9-4d16-8015-e09dfe1c45d8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.eslintignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/task-api/.eslintignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/task-api/src/core/entities/crud.interface.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/task-api/src/infrastructure/gateways/repositoryResponse.interface.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/task-api/src/task/persistence/task.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/task-ui/.eslintignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/app.controller.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/app.controller.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/app.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/database/factories/task.factory.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/database/interfaces/read.interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/core/entities/read.interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/database/interfaces/write.interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/core/entities/write.interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/database/task.db.json" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/infrastructure/persistence/db/task.db.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/task.controller.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/adapters/controllers/task.controller.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/task.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/adapters/controllers/task.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/task.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/task.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/task.repository.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/task.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/usecases/task.service.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/task.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/usecases/task.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/utils/repositoryResponse.ts" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Iam-cesar"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Iam-cesar/fullstack-app-task.git",
+    "accountId": "16a7c8bb-78c9-4871-b919-c03a8ab92613"
+  }
+}]]></component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/task-ui/package.json" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2oPhrtZhsRCqrySRDfooEuesxrX" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/abj/jsx/task-app",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.javascript.linters.eslint",
+    "ts.external.directory.path": "/home/abj/jsx/task-app/task-api/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/" />
+      <recent name="$PROJECT_DIR$/task-ui" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/task-api/src/infrastructure/persistence/db" />
+      <recent name="$PROJECT_DIR$/task-api/src/infrastructure/persistence" />
+      <recent name="$PROJECT_DIR$/task-api/src/core/entities" />
+      <recent name="$PROJECT_DIR$/task-api/src/infrastructure/gateways" />
+      <recent name="$PROJECT_DIR$/task-api/src/task/persistence" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23726.96" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f29f455d-f2c9-4d16-8015-e09dfe1c45d8" name="Changes" comment="" />
+      <created>1730777321631</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1730777321631</updated>
+      <workItem from="1730777322823" duration="301000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
 </project>
