@@ -1,10 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { TaskRepository } from "../persistence/task.repository.interface";
+import { Injectable } from '@nestjs/common';
+import { FindAllTaskRepository } from '../persistence/find-all-task.repository';
 
-export class FindAlltaskUseCase {
-  constructor(private readonly repo: TaskRepository) {}
+@Injectable()
+export class FindAllTaskUseCase {
+  constructor(private readonly repo: FindAllTaskRepository) {
+  }
 
   execute() {
-    return this.repo.findAll();
+    return this.repo.execute();
   }
 }

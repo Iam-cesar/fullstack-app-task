@@ -1,11 +1,13 @@
-import { UUID } from "crypto";
-import { TaskRepository } from "../persistence/task.repository.interface";
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+import { RemoveTaskRepository } from '../persistence/remove-task.repository';
 
+@Injectable()
 export class RemoveTaskUseCase {
-  constructor(private readonly repo: TaskRepository) {}
+  constructor(private readonly repo: RemoveTaskRepository) {
+  }
 
-  execute(id:UUID) {
-    return this.repo.remove(id);
+  execute(id: UUID) {
+    return this.repo.execute(id);
   }
 }

@@ -1,11 +1,13 @@
-import { UUID } from "crypto";
-import { TaskRepository } from "../persistence/task.repository.interface";
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+import { FindOneTaskRepository } from '../persistence/find-one-task.repository';
 
-export class FindOnetaskUseCase {
-  constructor(private readonly repo: TaskRepository) {}
+@Injectable()
+export class FindOneTaskUseCase {
+  constructor(private readonly repo: FindOneTaskRepository) {
+  }
 
-  execute(id:UUID) {
-    return this.repo.findOne(id);
+  execute(id: UUID) {
+    return this.repo.execute(id);
   }
 }

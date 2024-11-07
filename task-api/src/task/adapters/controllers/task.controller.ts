@@ -8,22 +8,22 @@ import {
   Post,
 } from '@nestjs/common';
 import { UUID } from 'crypto';
+import { CreateTaskUseCase } from 'src/task/usecases/create-task.use-case';
+import { FindAllTaskUseCase } from 'src/task/usecases/find-all-task.use-case';
+import { FindOneTaskUseCase } from 'src/task/usecases/find-one-task.use-case';
+import { RemoveTaskUseCase } from 'src/task/usecases/remove-task.use-case';
+import { UpdateTaskUseCase } from 'src/task/usecases/update-task.use-case';
 import { CRUD } from '../../../core/entities/crud.interface';
 import { CreateTaskDto } from '../../dto/create-task.dto';
 import { UpdateTaskDto } from '../../dto/update-task.dto';
 import { Task } from '../../entities/task.entity';
-import { CreateTaskUseCase } from 'src/task/usecases/create-task.use-case';
-import { FindOnetaskUseCase } from 'src/task/usecases/find-one-task.use-case';
-import { FindAlltaskUseCase } from 'src/task/usecases/find-all-task.use-case';
-import { UpdateTaskUseCase } from 'src/task/usecases/update-task.use-case';
-import { RemoveTaskUseCase } from 'src/task/usecases/remove-task.use-case';
 
 @Controller('task')
 export class TaskController implements CRUD<Task> {
   constructor(
     private readonly createTaskUseCase: CreateTaskUseCase,
-    private readonly findOneTaskUseCase: FindOnetaskUseCase,
-    private readonly findAllTaskUseCase: FindAlltaskUseCase,
+    private readonly findOneTaskUseCase: FindOneTaskUseCase,
+    private readonly findAllTaskUseCase: FindAllTaskUseCase,
     private readonly updateTaskUseCase: UpdateTaskUseCase,
     private readonly removeTaskUseCase: RemoveTaskUseCase,
   ) {}
