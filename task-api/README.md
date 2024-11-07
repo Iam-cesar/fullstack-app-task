@@ -26,6 +26,60 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Arquitetura
+
+Esta API foi desenvolvida utilizando os princípios da Arquitetura Limpa (Clean Architecture). A arquitetura limpa promove a separação de responsabilidades, facilitando a manutenção, testes e evolução do sistema. As principais camadas da arquitetura são:
+
+- **Camada de Entidades**: Contém as entidades de negócio, que são objetos de domínio da aplicação.
+- **Camada de Casos de Uso**: Contém a lógica de negócios e as regras de aplicação.
+- **Camada de Interface**: Contém os controladores e os adaptadores que lidam com a comunicação externa (HTTP, CLI, etc.).
+- **Camada de Infraestrutura**: Contém a implementação de repositórios, gateways e outros serviços de infraestrutura.
+
+### Estrutura do Projeto
+
+A estrutura do projeto segue a organização das camadas da arquitetura limpa:
+
+./src
+├── app.module.ts
+├── core
+│ └── entities
+│ ├── crud.interface.ts
+│ ├── read.interface.ts
+│ └── write.interface.ts
+├── infrastructure
+│ ├── gateways
+│ │ ├── repository-response.impl.ts
+│ │ └── repository-response.interface.ts
+│ └── persistence
+│ ├── db
+│ │ └── task.db.json
+│ └── repository
+│ └── base.repository.ts
+├── main.ts
+└── task
+├── adapters
+│ └── controllers
+│ ├── task.controller.spec.ts
+│ └── task.controller.ts
+├── dto
+│ ├── create-task.dto.ts
+│ └── update-task.dto.ts
+├── entities
+│ └── task.entity.ts
+├── persistence
+│ ├── create-task.repository.ts
+│ ├── find-all-task.repository.ts
+│ ├── find-one-task.repository.ts
+│ ├── remove-task.repository.ts
+│ └── update-task.repository.ts
+├── task.module.ts
+└── usecases
+├── create-task.use-case.ts
+├── find-all-task.use-case.ts
+├── find-one-task.use-case.ts
+├── remove-task.use-case.ts
+└── update-task.use-case.ts
+
 ## Project setup
 
 ```bash
