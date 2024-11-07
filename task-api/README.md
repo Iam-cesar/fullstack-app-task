@@ -39,46 +39,48 @@ Esta API foi desenvolvida utilizando os princípios da Arquitetura Limpa (Clean 
 
 A estrutura do projeto segue a organização das camadas da arquitetura limpa:
 
+```bash
 ./src
 ├── app.module.ts
 ├── core
-│ └── entities
-│ ├── crud.interface.ts
-│ ├── read.interface.ts
-│ └── write.interface.ts
+│   └── entities
+│       ├── crud.interface.ts
+│       ├── read.interface.ts
+│       └── write.interface.ts
 ├── infrastructure
-│ ├── gateways
-│ │ ├── repository-response.impl.ts
-│ │ └── repository-response.interface.ts
-│ └── persistence
-│ ├── db
-│ │ └── task.db.json
-│ └── repository
-│ └── base.repository.ts
+│   ├── gateways
+│   │   ├── repository-response.impl.ts
+│   │   └── repository-response.interface.ts
+│   └── persistence
+│       ├── db
+│       │   └── task.db.json
+│       └── repository
+│           └── base.repository.ts
 ├── main.ts
 └── task
-├── adapters
-│ └── controllers
-│ ├── task.controller.spec.ts
-│ └── task.controller.ts
-├── dto
-│ ├── create-task.dto.ts
-│ └── update-task.dto.ts
-├── entities
-│ └── task.entity.ts
-├── persistence
-│ ├── create-task.repository.ts
-│ ├── find-all-task.repository.ts
-│ ├── find-one-task.repository.ts
-│ ├── remove-task.repository.ts
-│ └── update-task.repository.ts
-├── task.module.ts
-└── usecases
-├── create-task.use-case.ts
-├── find-all-task.use-case.ts
-├── find-one-task.use-case.ts
-├── remove-task.use-case.ts
-└── update-task.use-case.ts
+    ├── adapters
+    │   └── controllers
+    │       ├── task.controller.spec.ts
+    │       └── task.controller.ts
+    ├── dto
+    │   ├── create-task.dto.ts
+    │   └── update-task.dto.ts
+    ├── entities
+    │   └── task.entity.ts
+    ├── persistence
+    │   ├── create-task.repository.ts
+    │   ├── find-all-task.repository.ts
+    │   ├── find-one-task.repository.ts
+    │   ├── remove-task.repository.ts
+    │   └── update-task.repository.ts
+    ├── task.module.ts
+    └── usecases
+        ├── create-task.use-case.ts
+        ├── find-all-task.use-case.ts
+        ├── find-one-task.use-case.ts
+        ├── remove-task.use-case.ts
+        └── update-task.use-case.ts
+```
 
 ## Project setup
 
