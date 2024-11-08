@@ -19,7 +19,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "${UI_PORT}:4200"
-    command: npm run ${UI_COMMAND} --host 0.0.0.0
+    command: npm run ${UI_COMMAND}
     networks:
       - app-network
 
