@@ -1,28 +1,55 @@
-version: "3.5"
+version: '3.5'
 
 services:
-  api:
-    build: ./task-api
-    volumes:
-      - ./task-api:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - "${API_PORT}:3000"
-    command: npm run ${API_COMMAND}
-    networks:
-      - app-network
-
   ui:
     build: ./task-ui
     volumes:
       - ./task-ui:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - "${UI_PORT}:4200"
+      - '${UI_PORT}:4200'
     command: npm run ${UI_COMMAND}
     networks:
       - app-network
 
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  api:
+    depends_on:
+      - postgres
+    build: ./task-api
+    volumes:
+      - ./task-api:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '${API_PORT}:3000'
+    command: npm run ${API_COMMAND}
+    networks:
+      - app-network
+    environment:
+      UI_URL: ${UI_URL}
+      API_PORT: ${API_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE_NAME: ${DB_DATABASE_NAME}
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres-data:

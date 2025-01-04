@@ -1,10 +1,9 @@
-import { UUID } from 'crypto';
-import { RepositoryResponseInterface } from '../../infrastructure/gateways/repository-response.interface';
+import { HttpException } from '@nestjs/common';
 
 export interface IRead<T> {
-  findAll(): Promise<RepositoryResponseInterface<T[]>>;
+  findAll(): Promise<T[] | HttpException>;
 
-  findOne(id: UUID): Promise<RepositoryResponseInterface<T>>;
+  findOne(id: string): Promise<T | HttpException>;
 
-  remove(id: UUID): Promise<RepositoryResponseInterface<T>>;
+  remove(id: string): Promise<T | HttpException>;
 }

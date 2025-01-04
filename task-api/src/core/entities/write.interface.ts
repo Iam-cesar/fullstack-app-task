@@ -1,8 +1,7 @@
-import { UUID } from 'crypto';
-import { RepositoryResponseInterface } from '../../infrastructure/gateways/repository-response.interface';
+import { HttpException } from '@nestjs/common';
 
 export interface IWrite<T> {
-  create(createDto): Promise<RepositoryResponseInterface<T>>;
+  create(createDto: Partial<T>): Promise<T | HttpException>;
 
-  update(id: UUID, updateDTO): Promise<RepositoryResponseInterface<T>>;
+  update(id: string, updateDTO: Partial<T>): Promise<T | HttpException>;
 }

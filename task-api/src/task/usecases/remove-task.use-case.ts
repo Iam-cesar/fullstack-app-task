@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { UUID } from 'crypto';
-import { RemoveTaskRepository } from '../persistence/remove-task.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Task } from '../entities/task.entity';
+import { TaskRepository } from '../persistence/task.repository';
 
 @Injectable()
 export class RemoveTaskUseCase {
-  constructor(private readonly repo: RemoveTaskRepository) {
-  }
+  constructor(
+    @InjectRepository(Task)
+    private readonly taskRepository: TaskRepository,
+  ) {}
 
-  execute(id: UUID) {
-    return this.repo.execute(id);
+  async execute(id: number): Promise<Task> {
+    const task = await this.taskRepository.findOneOrFail({ where: { id } });
+    return await this.taskRepository.remove(task);
   }
 }
