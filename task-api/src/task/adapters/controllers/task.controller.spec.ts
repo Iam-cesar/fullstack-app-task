@@ -1,12 +1,13 @@
 import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PageDto } from 'src/core/dto/Page.dto';
+
+import { PageDto } from '../../../core/dto/Page.dto';
+import { CreateTaskDto } from '../../../task/dto/create-task.dto';
+import { Task } from '../../../task/entities/task.entity';
 import { CreateTaskUseCase } from '../../../task/usecases/create-task.use-case';
 import { FindAllTaskUseCase } from '../../../task/usecases/find-all-task.use-case';
 import { FindOneTaskUseCase } from '../../../task/usecases/find-one-task.use-case';
 import { RemoveTaskUseCase } from '../../../task/usecases/remove-task.use-case';
-import { CreateTaskDto } from '../../dto/create-task.dto';
-import { Task } from '../../entities/task.entity';
 import { TaskController } from './task.controller';
 
 describe('TaskController', () => {
@@ -100,7 +101,7 @@ describe('TaskController', () => {
         .spyOn(findAllTaskUseCase, 'execute')
         .mockResolvedValue(paginationModel);
 
-      expect(await controller.findAll()).toBe(result);
+      expect(await controller.findAll()).toBe(paginationModel);
     });
 
     it('should throw an error if finding all tasks fails', async () => {

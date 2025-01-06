@@ -11,8 +11,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CRUD } from 'src/core/interfaces/crud.interface';
 import { FindOptionsOrderValue, Like } from 'typeorm';
+import { CRUD } from '../../../core/interfaces/crud.interface';
 import { CreateTaskUseCase } from '../../../task/usecases/create-task.use-case';
 import { FindAllTaskUseCase } from '../../../task/usecases/find-all-task.use-case';
 import { FindOneTaskUseCase } from '../../../task/usecases/find-one-task.use-case';

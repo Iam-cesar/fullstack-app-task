@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PageDto } from 'src/core/dto/Page.dto';
-import { PageMetaDto } from 'src/core/dto/PageMeta.dto';
-import { PageOptionsDto } from 'src/core/dto/PageOptions.dto';
 import { FindManyOptions } from 'typeorm';
+import { PageDto } from '../../core/dto/Page.dto';
+import { PageMetaDto } from '../../core/dto/PageMeta.dto';
+import { PageOptionsDto } from '../../core/dto/PageOptions.dto';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from '../persistence/task.repository';
 
