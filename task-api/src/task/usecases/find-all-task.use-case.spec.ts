@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { PageDto } from '../../core/dto/Page.dto';
+import { PageMetaDto } from '../../core/dto/PageMeta.dto';
+import { PageOptionsDto } from '../../core/dto/PageOptions.dto';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from '../persistence/task.repository';
 import { FindAllTaskUseCase } from './find-all-task.use-case';
@@ -14,7 +17,9 @@ describe('FindAllTaskUseCase', () => {
         FindAllTaskUseCase,
         {
           provide: getRepositoryToken(Task),
-          useClass: TaskRepository,
+          useValue: {
+            findAndCount: jest.fn(),
+          },
         },
       ],
     }).compile();
@@ -27,28 +32,25 @@ describe('FindAllTaskUseCase', () => {
     expect(findAllTaskUseCase).toBeDefined();
   });
 
-  it('should return an array of tasks', async () => {
-    const tasks: Task[] = [
-      {
-        id: 1,
-        title: 'Test Task',
-        description: 'Test Description',
-        isCompleted: false,
-        createdAt: '',
-        updatedAt: '',
-      },
-    ];
-    jest.spyOn(taskRepository, 'find').mockResolvedValue(tasks);
+  it('should return a PageDto with tasks and meta data', async () => {
+    const tasks = [new Task(), new Task()];
+    const totalItems = 2;
+    const params = {};
+    const pageOptionsDto = new PageOptionsDto<Task>(params);
+    const pageMetaDto = new PageMetaDto({
+      items_count: totalItems,
+      pageOptions: params,
+    });
 
-    const result = await findAllTaskUseCase.execute();
-    expect(result).toEqual(tasks);
-  });
+    jest
+      .spyOn(taskRepository, 'findAndCount')
+      .mockResolvedValue([tasks, totalItems]);
 
-  it('should call taskRepository.find with correct parameters', async () => {
-    const params = { where: { title: 'Test Task' } };
-    const findSpy = jest.spyOn(taskRepository, 'find').mockResolvedValue([]);
+    const result = await findAllTaskUseCase.execute(params);
 
-    await findAllTaskUseCase.execute(params);
-    expect(findSpy).toHaveBeenCalledWith(params);
+    expect(taskRepository.findAndCount).toHaveBeenCalledWith({
+      ...pageOptionsDto,
+    });
+    expect(result).toEqual(new PageDto(tasks, pageMetaDto));
   });
 });
