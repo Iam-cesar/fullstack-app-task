@@ -1,5 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { PageDto } from 'src/core/dto/Page.dto';
 import { CreateTaskUseCase } from '../../../task/usecases/create-task.use-case';
 import { FindAllTaskUseCase } from '../../../task/usecases/find-all-task.use-case';
 import { FindOneTaskUseCase } from '../../../task/usecases/find-one-task.use-case';
@@ -21,27 +22,19 @@ describe('TaskController', () => {
       providers: [
         {
           provide: CreateTaskUseCase,
-          useValue: {
-            execute: jest.fn(),
-          },
+          useValue: { execute: jest.fn() },
         },
         {
           provide: FindAllTaskUseCase,
-          useValue: {
-            execute: jest.fn(),
-          },
+          useValue: { execute: jest.fn() },
         },
         {
           provide: FindOneTaskUseCase,
-          useValue: {
-            execute: jest.fn(),
-          },
+          useValue: { execute: jest.fn() },
         },
         {
           provide: RemoveTaskUseCase,
-          useValue: {
-            execute: jest.fn(),
-          },
+          useValue: { execute: jest.fn() },
         },
       ],
     }).compile();
@@ -78,7 +71,7 @@ describe('TaskController', () => {
       };
       jest
         .spyOn(createTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Error creating task'));
+        .mockRejectedValue(new Error('Error'));
 
       await expect(controller.create(createTaskDto)).rejects.toThrow(
         HttpException,
@@ -87,7 +80,7 @@ describe('TaskController', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of tasks', async () => {
+    it('should return all tasks', async () => {
       const result: Task[] = [
         {
           id: 1,
@@ -98,22 +91,29 @@ describe('TaskController', () => {
           updatedAt: '',
         },
       ];
-      jest.spyOn(findAllTaskUseCase, 'execute').mockResolvedValue(result);
+
+      const paginationModel: PageDto<Task> = {
+        meta: undefined,
+        data: result,
+      };
+      jest
+        .spyOn(findAllTaskUseCase, 'execute')
+        .mockResolvedValue(paginationModel);
 
       expect(await controller.findAll()).toBe(result);
     });
 
-    it('should throw an error if fetching fails', async () => {
+    it('should throw an error if finding all tasks fails', async () => {
       jest
         .spyOn(findAllTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Error fetching tasks'));
+        .mockRejectedValue(new Error('Error'));
 
       await expect(controller.findAll()).rejects.toThrow(HttpException);
     });
   });
 
   describe('findOne', () => {
-    it('should return a single task', async () => {
+    it('should return a task by id', async () => {
       const result: Task = {
         id: 1,
         title: 'Test Task',
@@ -134,7 +134,7 @@ describe('TaskController', () => {
     it('should throw an error if task is not found', async () => {
       jest
         .spyOn(findOneTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Task not found'));
+        .mockRejectedValue(new Error('Error'));
 
       await expect(controller.findOne('1')).rejects.toThrow(HttpException);
     });
@@ -142,15 +142,15 @@ describe('TaskController', () => {
 
   describe('update', () => {
     it('should update a task', async () => {
-      const updateTaskDto: Task = {
-        title: 'Updated Task',
-        id: 0,
+      const updateTaskDto = { title: 'Updated Task' };
+      const result: Task = {
+        id: 1,
+        ...updateTaskDto,
         description: '',
         isCompleted: false,
         createdAt: '',
         updatedAt: '',
       };
-      const result = { id: 1, ...updateTaskDto };
       jest.spyOn(createTaskUseCase, 'execute').mockResolvedValue(result);
 
       expect(await controller.update('1', updateTaskDto)).toBe(result);
@@ -161,14 +161,11 @@ describe('TaskController', () => {
     });
 
     it('should throw an error if update fails', async () => {
-      const updateTaskDto: Partial<Task> = { title: 'Updated Task' };
       jest
         .spyOn(createTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Task not found'));
+        .mockRejectedValue(new Error('Error'));
 
-      await expect(controller.update('1', updateTaskDto)).rejects.toThrow(
-        HttpException,
-      );
+      await expect(controller.update('1', {})).rejects.toThrow(HttpException);
     });
   });
 
@@ -191,10 +188,10 @@ describe('TaskController', () => {
       await expect(controller.remove('abc')).rejects.toThrow(HttpException);
     });
 
-    it('should throw an error if removal fails', async () => {
+    it('should throw an error if remove fails', async () => {
       jest
         .spyOn(removeTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Task not found'));
+        .mockRejectedValue(new Error('Error'));
 
       await expect(controller.remove('1')).rejects.toThrow(HttpException);
     });
