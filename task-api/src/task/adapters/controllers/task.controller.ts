@@ -11,8 +11,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CRUD } from 'src/core/entities/crud.interface';
-import { FindOptionsOrder, Like } from 'typeorm';
+import { CRUD } from 'src/core/interfaces/crud.interface';
+import { FindOptionsOrderValue, Like } from 'typeorm';
 import { CreateTaskUseCase } from '../../../task/usecases/create-task.use-case';
 import { FindAllTaskUseCase } from '../../../task/usecases/find-all-task.use-case';
 import { FindOneTaskUseCase } from '../../../task/usecases/find-one-task.use-case';
@@ -45,11 +45,11 @@ export class TaskController implements CRUD<Task> {
     @Query('perPage') perPage?: string,
     @Query('page') page?: string,
     @Query('search') search?: string,
-    @Query('order') order?: FindOptionsOrder<Task>,
+    @Query('order') order?: FindOptionsOrderValue,
   ) {
     try {
-      const take = Number(perPage) || 15;
-      const skip = (Number(page) - 1) * take || 0;
+      const take = parseInt(perPage);
+      const skip = parseInt(page);
       const where = search ? { title: Like(`%${search}%`) } : {};
 
       return await this.findAllTaskUseCase.execute({
@@ -57,7 +57,7 @@ export class TaskController implements CRUD<Task> {
         skip,
         cache: 5000,
         where,
-        order,
+        order: { createdAt: order },
       });
     } catch (error) {
       throw new HttpException(

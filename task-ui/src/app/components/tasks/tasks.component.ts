@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { RepositoryResponseInterface } from '../../core/shared/types/repository-response.interface';
+import { BASE_URL } from '../../../core/http/constants';
 import { Task } from './task.interface';
 
 @Component({
@@ -8,7 +8,6 @@ import { Task } from './task.interface';
   standalone: true,
   imports: [],
   templateUrl: './tasks.component.html',
-  styleUrl: './tasks.component.css',
 })
 export class TasksComponent implements OnInit {
   httpClient = inject(HttpClient);
@@ -20,9 +19,7 @@ export class TasksComponent implements OnInit {
 
   fetchTasks() {
     this.httpClient
-      .get<RepositoryResponseInterface<Task[]>>('http://localhost:3000/task')
-      .subscribe(({ data }) => {
-        this.tasks = data;
-      });
+      .get<Task[]>(`${BASE_URL}/task`)
+      .subscribe((data) => (this.tasks = data));
   }
 }

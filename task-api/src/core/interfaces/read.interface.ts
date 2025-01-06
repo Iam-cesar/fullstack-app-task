@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 
 export interface IRead<T> {
-  findAll(): Promise<T[] | HttpException>;
+  findAll();
 
   findOne(id: string): Promise<T | HttpException>;
 

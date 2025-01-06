@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TasksComponent } from './tasks/tasks.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { TasksComponent } from './components/tasks/tasks.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TasksComponent],
+  imports: [RouterOutlet, TasksComponent, NavbarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'task-ui';

@@ -1,0 +1,12 @@
+<div class="w-full">
+  <h1>Tarefas</h1>
+
+  @for (task of tasks; track task.id) {
+  <div class="task">
+    <h2>{{ task.title }}</h2>
+    <p>{{ task.description }}</p>
+  </div>
+  } @empty {
+  <p>Não há tarefas</p>
+  }
+</div>
