@@ -10,9 +10,9 @@ API_PORT=3000
 INTERNAL_API_PORT=3000
 API_COMMAND=start:dev
 
-UI_PORT=4200
-UI_COMMAND=start
-UI_URL=http://localhost:4200
+UI_PORT=5173
+UI_COMMAND=dev
+UI_URL=http://localhost:5173
 
 DB_HOST=postgres
 DB_PORT=5432

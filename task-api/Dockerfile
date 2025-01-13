@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE ${PORT}
+EXPOSE ${API_PORT}
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
