@@ -1,7 +1,7 @@
 import { GlobalContextProvider } from '../../core/providers/GlobalProvider';
-import CreateTaskFormModal from './components/CreateTaskFormModal';
-import ListTasksSection from './components/ListTasksSection';
-import { Topbar } from './components/Topbar';
+import CreateTaskFormModal from '../../core/shared/components/CreateTaskFormModal';
+import ListTasksSection from '../../core/shared/components/ListTasksSection';
+import { Topbar } from '../../core/shared/components/Topbar';
 
 const Home = () => {
   return (

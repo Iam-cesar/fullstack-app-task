@@ -4,7 +4,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+
 } from 'typeorm';
+import { TaskEnumKeys, TaskEnumStatus } from './task.enum';
 
 @Entity()
 export class Task {
@@ -17,8 +19,8 @@ export class Task {
   @Column({ name: 'description' })
   description: string;
 
-  @Column({ name: 'is_completed', default: false, nullable: false })
-  isCompleted: boolean;
+  @Column({ name: 'status', default: TaskEnumStatus.PENDING, nullable: false })
+  status: TaskEnumKeys;
 
   @CreateDateColumn({ name: 'created_at', nullable: false })
   createdAt: string;

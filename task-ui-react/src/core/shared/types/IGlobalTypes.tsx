@@ -2,9 +2,14 @@ import { initialGlobalState } from '../../states/initialGlobalState';
 import { Task } from './ITask';
 
 export interface IGlobalContextProps {
-  tasks: Task[];
+  tasks: IFilteredTaskPerStatus;
   isCreateTaskModalOpen: boolean;
   updateGlobalState: (key: TInitialGlobalContextKeys, value: unknown) => void;
+}
+
+export interface IInitialGlobalProps {
+  tasks: IFilteredTaskPerStatus;
+  isCreateTaskModalOpen: boolean;
 }
 
 export type TInitialGlobalContextKeys = keyof typeof initialGlobalState;
@@ -19,4 +24,10 @@ export interface IApiResponse<T> {
     has_next_page: boolean;
   };
   data: T;
+}
+
+export interface IFilteredTaskPerStatus {
+  completed: Task[];
+  inProgress: Task[];
+  pending: Task[];
 }

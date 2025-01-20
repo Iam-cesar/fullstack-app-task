@@ -17,7 +17,7 @@ export const Topbar = () => {
   return (
     <header className="bg-white shadow-md z-20 relative">
       <div className="mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
-        <a className="block text-teal-600" href="#">
+        <a className="block text-teal-600" href="">
           <span className="sr-only">Home</span>
           <svg
             className="h-8"

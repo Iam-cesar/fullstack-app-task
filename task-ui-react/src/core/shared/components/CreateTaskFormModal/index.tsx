@@ -40,7 +40,7 @@ const CreateTaskFormModal = () => {
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const task = await handleCreateTask();
-      if (task?.id) updateGlobalState('tasks', tasks.concat(task));
+      if (task?.id) updateGlobalState('tasks', tasks.pending.concat(task));
       updateGlobalState('isCreateTaskModalOpen', false);
       clearInputValue();
     },
@@ -49,7 +49,7 @@ const CreateTaskFormModal = () => {
 
   return (
     <div
-      className={`${showCreateFormModal} mt-1 z-20 absolute top-16 left-0 bg-white size-full transition mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8`}
+      className={`${showCreateFormModal} mt-1 z-20 absolute top-16 left-0 bg-white size-full transition mx-auto  px-4 py-16 sm:px-6 lg:px-8`}
     >
       <div className="mx-auto max-w-lg text-center">
         <h1 className="text-2xl font-bold sm:text-3xl">
