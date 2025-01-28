@@ -9,13 +9,15 @@ interface TaskCardsColumnProps {
 }
 
 const TaskCardsColumn = ({ tasks, sectionTitle }: TaskCardsColumnProps) => {
+  const id = sectionTitle.replace(' ', '-').toLowerCase();
+
   return (
     <div className="grid-cols-1 gap-4 flex flex-col">
       <p className="font-semibold text-xl text-black">{sectionTitle}</p>
 
-      <Droppable id={sectionTitle.replace(' ', '-').toLowerCase()}>
+      <Droppable id={id}>
         <>
-          {tasks.map((task) => (
+          {tasks?.map((task) => (
             <Draggable key={task.id} id={task.id.toString()}>
               <TaskCard task={task} />
             </Draggable>
