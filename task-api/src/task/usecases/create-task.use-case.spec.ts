@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { Task } from '../entities/task.entity';
+import { TaskEnumStatus } from '../entities/task.enum';
 import { TaskRepository } from '../persistence/task.repository';
 import { CreateTaskUseCase } from './create-task.use-case';
 
@@ -32,6 +33,7 @@ describe('CreateTaskUseCase', () => {
     const input: CreateTaskDto = {
       title: 'Test Task',
       description: 'Test Description',
+      status: TaskEnumStatus.PENDING,
     };
 
     const task: Task = {
