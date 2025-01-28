@@ -1,51 +1,15 @@
-import { useCallback, useState } from 'react';
-import useGlobalContext from '../../../../core/hooks/useGlobalContext';
-import useTaskService from '../../../../core/shared/hooks/useTaskService';
-import { TaskPayload } from '../../../../core/shared/types/ITask';
 import Button from '../Button';
+import useCreateTaskFormModal from './useCreateTaskFormModal';
 
-const MIN_VALID_LENGTH = 4;
-const initialPayloadValue = {
-  description: '',
-  title: '',
-};
 const CreateTaskFormModal = () => {
-  const { postTask, isLoading } = useTaskService();
-  const { isCreateTaskModalOpen, tasks, updateGlobalState } =
-    useGlobalContext();
-
-  const [payload, setPayload] = useState<TaskPayload>(initialPayloadValue);
-
-  const showCreateFormModal =
-    !isCreateTaskModalOpen && 'opacity-0 pointer-events-none -z-10 ';
-
-  const isPayloadTitleLengthValid = payload.title.length > MIN_VALID_LENGTH;
-  const isPayloadDescriptionLengthValid =
-    payload.description.length > MIN_VALID_LENGTH;
-
-  const isPayloadValid =
-    isPayloadTitleLengthValid && isPayloadDescriptionLengthValid;
-
-  const handleCreateTask = useCallback(
-    async () => await postTask(payload),
-    [payload, postTask],
-  );
-
-  const clearInputValue = useCallback(
-    () => setPayload(initialPayloadValue),
-    [],
-  );
-
-  const onFormSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const task = await handleCreateTask();
-      if (task?.id) updateGlobalState('tasks', tasks.pending.concat(task));
-      updateGlobalState('isCreateTaskModalOpen', false);
-      clearInputValue();
-    },
-    [handleCreateTask, updateGlobalState, clearInputValue, tasks],
-  );
+  const {
+    isLoading,
+    isPayloadValid,
+    onFormSubmit,
+    showCreateFormModal,
+    payload,
+    setPayload,
+  } = useCreateTaskFormModal();
 
   return (
     <div
