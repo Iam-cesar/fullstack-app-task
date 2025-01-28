@@ -56,7 +56,7 @@ describe('TaskController', () => {
       const result: Task = {
         id: 1,
         ...createTaskDto,
-        isCompleted: false,
+        status: 'PENDING',
         createdAt: '',
         updatedAt: '',
       };
@@ -87,7 +87,7 @@ describe('TaskController', () => {
           id: 1,
           title: 'Test Task',
           description: '',
-          isCompleted: false,
+          status: 'PENDING',
           createdAt: '',
           updatedAt: '',
         },
@@ -119,7 +119,7 @@ describe('TaskController', () => {
         id: 1,
         title: 'Test Task',
         description: '',
-        isCompleted: false,
+        status: 'PENDING',
         createdAt: '',
         updatedAt: '',
       };
@@ -148,7 +148,7 @@ describe('TaskController', () => {
         id: 1,
         ...updateTaskDto,
         description: '',
-        isCompleted: false,
+        status: 'PENDING',
         createdAt: '',
         updatedAt: '',
       };
@@ -176,7 +176,7 @@ describe('TaskController', () => {
         id: 1,
         title: 'Test Task',
         description: '',
-        isCompleted: false,
+        status: 'PENDING',
         createdAt: '',
         updatedAt: '',
       };

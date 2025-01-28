@@ -5,16 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f29f455d-f2c9-4d16-8015-e09dfe1c45d8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/task-api/src/task/entities/task.enum.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/src/app/app.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui/src/app/app.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/src/app/tasks/tasks.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/src/app/tasks/tasks.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui/src/app/tasks/tasks.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-ui/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui/src/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/core/config/typeorm/typeOrmConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/core/config/typeorm/typeOrmConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/adapters/controllers/task.controller.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/adapters/controllers/task.controller.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/adapters/controllers/task.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/adapters/controllers/task.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/dto/create-task.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/dto/create-task.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/entities/task.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/entities/task.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-api/src/task/usecases/create-task.use-case.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/task-api/src/task/usecases/create-task.use-case.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-ui-react/src/core/shared/types/ITask.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui-react/src/core/shared/types/ITask.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/CreateTaskFormModal/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/CreateTaskFormModal/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/ListTasksSection/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/ListTasksSection/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/TaskCard/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/TaskCard/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/Topbar/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/task-ui-react/src/pages/Home/components/Topbar/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +32,9 @@
         <option value="TypeScript File" />
       </list>
     </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -43,8 +51,8 @@
     &quot;accountId&quot;: &quot;50fd3d57-f3dd-403d-9b6e-7995b7899ead&quot;
   }
 }</component>
-  <component name="PackageJsonUpdateNotifier">
-    <dismissed value="$PROJECT_DIR$/task-ui/package.json" />
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -60,23 +68,28 @@
     "Jest.Tests in task/.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "code.cleanup.on.save": "true",
     "git-widget-placeholder": "main",
+    "js.linters.configure.manually.selectedeslint": "true",
     "last_opened_file_path": "/home/abj/fullstack-app-task",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.eslint": "/home/abj/fullstack-app-task/task-ui-react/node_modules/eslint",
     "node.js.selected.package.standard": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs.jest.jest_package": "/home/abj/fullstack-app-task/task-api/node_modules/jest",
+    "nodejs_interpreter_path": "/home/abj/.nvm/versions/node/v20.18.1/bin/node",
     "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "/home/abj/fullstack-app-task/task-api/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "rearrange.code.on.save": "true",
+    "settings.editor.selected.configurable": "actions.on.save",
     "ts.external.directory.path": "/home/abj/fullstack-app-task/task-api/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/task-api" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/" />
       <recent name="$PROJECT_DIR$/task-ui" />
@@ -108,7 +121,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-WS-243.22562.222" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-WS-243.23654.120" />
       </set>
     </attachedChunks>
   </component>
@@ -125,6 +138,7 @@
       <workItem from="1731088045241" duration="1997000" />
       <workItem from="1731091009428" duration="1660000" />
       <workItem from="1735915446342" duration="899000" />
+      <workItem from="1737290905219" duration="9196000" />
     </task>
     <servers />
   </component>

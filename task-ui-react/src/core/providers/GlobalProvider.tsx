@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { GlobalContext } from '../contexts/GlobalContext';
 import {
-  IGlobalContextProps,
-  TGlobalContextKeys,
+  IInitialGlobalProps,
+  TInitialGlobalContextKeys,
 } from '../shared/types/IGlobalTypes';
 import { initialGlobalState } from '../states/initialGlobalState';
 
@@ -13,10 +13,10 @@ export const GlobalContextProvider = ({
   children,
 }: IGlobalContextProviderProps) => {
   const [globalState, setGlobalState] =
-    useState<IGlobalContextProps>(initialGlobalState);
+    useState<IInitialGlobalProps>(initialGlobalState);
 
   const updateGlobalState = useCallback(
-    (key: TGlobalContextKeys, value: unknown) =>
+    (key: TInitialGlobalContextKeys, value: unknown) =>
       setGlobalState((prev) => ({ ...prev, [key]: value })),
     [setGlobalState],
   );

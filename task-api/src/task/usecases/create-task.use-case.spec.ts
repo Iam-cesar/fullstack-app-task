@@ -37,7 +37,7 @@ describe('CreateTaskUseCase', () => {
     const task: Task = {
       ...input,
       id: 0,
-      isCompleted: false,
+      status: 'PENDING',
       createdAt: '',
       updatedAt: '',
     };

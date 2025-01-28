@@ -8,5 +8,4 @@ export const typeOrmConfig: DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE_NAME,
   entities: ['dist/**/*.entity.js'],
-  synchronize: true,
 };
