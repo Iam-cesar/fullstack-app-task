@@ -1,6 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { TaskEnumStatus } from 'src/task/entities/task.enum';
 import { PageDto } from '../../../core/dto/Page.dto';
 import { CreateTaskDto } from '../../../task/dto/create-task.dto';
 import { Task } from '../../../task/entities/task.entity';
@@ -52,6 +53,7 @@ describe('TaskController', () => {
       const createTaskDto: CreateTaskDto = {
         title: 'Test Task',
         description: '',
+        status: TaskEnumStatus.PENDING,
       };
       const result: Task = {
         id: 1,
@@ -69,6 +71,7 @@ describe('TaskController', () => {
       const createTaskDto: CreateTaskDto = {
         title: 'Test Task',
         description: '',
+        status: TaskEnumStatus.PENDING,
       };
       jest
         .spyOn(createTaskUseCase, 'execute')
