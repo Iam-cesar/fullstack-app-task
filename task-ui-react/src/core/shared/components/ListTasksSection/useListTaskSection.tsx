@@ -1,13 +1,9 @@
+import { DragEndEvent } from '@dnd-kit/core';
 import { useCallback, useEffect, useRef } from 'react';
 import useGlobalContext from '../../../../core/hooks/useGlobalContext';
 import useTaskService from '../../../../core/shared/hooks/useTaskService';
-import { IFilteredTaskPerStatus } from '../../../../core/shared/types/IGlobalTypes.tsx';
-
-const initialTasksPerStatus: IFilteredTaskPerStatus = {
-  completed: [],
-  inProgress: [],
-  pending: [],
-};
+import { TaskStatus } from '../../types/ITask.tsx';
+import { functionGetFilteredTasks } from '../../utils/getFilteredTasks.ts';
 
 const useListTaskSection = () => {
   const { tasks, updateGlobalState } = useGlobalContext();
@@ -16,13 +12,7 @@ const useListTaskSection = () => {
 
   const getInitialTasks = useCallback(async () => {
     const tasks = await getTasks();
-    const filteredTasks = tasks.reduce((acc, task) => {
-      if (task.status === 'PENDING') acc.pending.push(task);
-      if (task.status === 'COMPLETED') acc.completed.push(task);
-      if (task.status === 'IN_PROGRESS') acc.inProgress.push(task);
-      return acc;
-    }, initialTasksPerStatus);
-
+    const filteredTasks = functionGetFilteredTasks(tasks);
     updateGlobalState('tasks', filteredTasks);
   }, [getTasks, updateGlobalState]);
 
@@ -33,8 +23,44 @@ const useListTaskSection = () => {
     }
   }, [getInitialTasks]);
 
+  const onDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (over && active.id !== over.id) {
+        const allTasks = [
+          ...tasks.pending,
+          ...tasks.inProgress,
+          ...tasks.completed,
+        ];
+
+        const activeId = active.id.toString().replace('draggable-', '');
+
+        const overId = over.id
+          .toString()
+          .replace('droppable-', '') as TaskStatus;
+
+        const [selectedTask] = allTasks.filter(
+          (task) => task.id === Number(activeId),
+        );
+        const updatedSelectedTask = { ...selectedTask, status: overId };
+
+        const tasksWithoutSelected = allTasks.filter(
+          (task) => task.id !== Number(activeId),
+        );
+
+        const updatedTasks = [...tasksWithoutSelected, updatedSelectedTask];
+
+        const filteredTasks = functionGetFilteredTasks(updatedTasks);
+
+        updateGlobalState('tasks', filteredTasks);
+      }
+    },
+    [tasks.completed, tasks.inProgress, tasks.pending, updateGlobalState],
+  );
+
   return {
     tasks,
+    onDragEnd,
     updateGlobalState,
   };
 };

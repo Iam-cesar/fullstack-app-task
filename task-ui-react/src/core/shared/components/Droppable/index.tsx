@@ -4,12 +4,16 @@ interface IDroppableProps {
   children: JSX.Element;
   id: string;
 }
-const Droppable = ({ children, id }: IDroppableProps) => {
-  const { setNodeRef } = useDroppable({ id: `droppable-${id}` });
+const Droppable = (props: IDroppableProps) => {
+  const { setNodeRef } = useDroppable({
+    id: `droppable-${props?.id}`,
+  });
+
+  const style = {};
 
   return (
-    <div className="flex gap-4 flex-col" ref={setNodeRef}>
-      {children}
+    <div className="flex gap-4 flex-col" ref={setNodeRef} style={style}>
+      {props?.children}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Task } from '../../types/ITask';
+import { Task, TaskStatus } from '../../types/ITask';
 import Draggable from '../Draggable';
 import Droppable from '../Droppable';
 import TaskCard from '../TaskCard';
@@ -8,8 +8,15 @@ interface TaskCardsColumnProps {
   sectionTitle: string;
 }
 
+const taskStatus = {
+  pendentes: TaskStatus.PENDING,
+  'em-progresso': TaskStatus.IN_PROGRESS,
+  finalizadas: TaskStatus.COMPLETED,
+};
+
 const TaskCardsColumn = ({ tasks, sectionTitle }: TaskCardsColumnProps) => {
-  const id = sectionTitle.replace(' ', '-').toLowerCase();
+  const threatedSectionTitle = sectionTitle.replace(' ', '-').toLowerCase();
+  const id = taskStatus[threatedSectionTitle as keyof typeof taskStatus];
 
   return (
     <div className="grid-cols-1 gap-4 flex flex-col">

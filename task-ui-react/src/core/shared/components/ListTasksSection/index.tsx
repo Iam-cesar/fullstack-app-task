@@ -1,36 +1,19 @@
 import { DndContext, closestCorners } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
-import { useState } from 'react';
-import SortableItem from '../SortableItem/index.tsx';
 import TaskCardsColumn from '../TaskCardsColumn/index.tsx';
 import useListTaskSection from './useListTaskSection.tsx';
 
 const ListTasksSection = () => {
-  const { tasks } = useListTaskSection();
-  const [items] = useState(['pending', 'inProgress', 'completed']);
+  const { tasks, onDragEnd } = useListTaskSection();
 
   return (
-    <DndContext collisionDetection={closestCorners}>
-      <SortableContext items={items}>
-        <div className="mx-auto my-0 container p-4 grid gap-4 grid-cols-3">
-          <SortableItem id="pending">
-            <TaskCardsColumn sectionTitle="Pendentes" tasks={tasks.pending} />
-          </SortableItem>
+    <DndContext collisionDetection={closestCorners} onDragEnd={onDragEnd}>
+      <div className="mx-auto my-0 container p-4 grid gap-4 grid-cols-3">
+        <TaskCardsColumn sectionTitle="Pendentes" tasks={tasks.pending} />
 
-          <SortableItem id="inProgress">
-            <TaskCardsColumn
-              sectionTitle="Em progresso"
-              tasks={tasks.inProgress}
-            />
-          </SortableItem>
-          <SortableItem id="completed">
-            <TaskCardsColumn
-              sectionTitle="Finalizadas"
-              tasks={tasks.completed}
-            />
-          </SortableItem>
-        </div>
-      </SortableContext>
+        <TaskCardsColumn sectionTitle="Em progresso" tasks={tasks.inProgress} />
+
+        <TaskCardsColumn sectionTitle="Finalizadas" tasks={tasks.completed} />
+      </div>
     </DndContext>
   );
 };
