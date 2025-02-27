@@ -25,7 +25,13 @@ export const taskService = {
 
     return objectToReturn;
   },
+
   postTask: async (payload: TaskPayload): Promise<Task> => {
+    const { data } = await httpClient.post<Task>('/task', payload);
+    return data;
+  },
+
+  patchTask: async (payload: Task): Promise<Task> => {
     const { data } = await httpClient.post<Task>('/task', payload);
     return data;
   },

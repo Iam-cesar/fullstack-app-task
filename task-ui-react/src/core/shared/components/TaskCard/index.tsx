@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Task } from '../../../../core/shared/types/ITask';
 
 const taskStatus = {
@@ -17,8 +18,15 @@ const TaskCard = ({ task }: ITaskCardProps) => {
     dateStyle: 'medium',
   })?.format(new Date(task.createdAt));
 
+  const handleClickOnTaskCard = useCallback(() => {
+    console.log(task);
+  }, [task]);
+
   return (
-    <article className="rounded-xl h-max relative *:rounded-md *:border-2 *:border-black *:text-black">
+    <article
+      onClick={handleClickOnTaskCard}
+      className="rounded-xl h-max relative *:rounded-md *:border-2 *:border-black *:text-black"
+    >
       <div className="relative rounded-[10px] bg-white p-4 sm:p-6 transition hover:-translate-x-1 hover:-translate-y-1 z-10 hover:cursor-pointer">
         <time dateTime="2022-10-10" className="block text-xs text-gray-500">
           {createdAt}
