@@ -13,14 +13,14 @@ import {
 } from '@nestjs/common';
 import { FindOptionsOrderValue, Like } from 'typeorm';
 import { CRUD } from '../../../core/interfaces/crud.interface';
+import { CreateTaskDto } from '../../dto/create-task.dto';
+import { UpdateTaskDto } from '../../dto/update-task.dto';
+import { Task } from '../../entities/task.entity';
+import { TaskEnumStatus } from '../../entities/task.enum';
 import { CreateTaskUseCase } from '../../usecases/create-task.use-case';
 import { FindAllTaskUseCase } from '../../usecases/find-all-task.use-case';
 import { FindOneTaskUseCase } from '../../usecases/find-one-task.use-case';
 import { RemoveTaskUseCase } from '../../usecases/remove-task.use-case';
-import { CreateTaskDto } from '../../dto/create-task.dto';
-import { Task } from '../../entities/task.entity';
-import { UpdateTaskDto } from '../../dto/update-task.dto';
-import { TaskEnumStatus } from '../../entities/task.enum';
 
 @Controller('task')
 export class TaskController implements CRUD<Task> {
@@ -75,8 +75,9 @@ export class TaskController implements CRUD<Task> {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
+    if (isNaN(+id)) throw this.throwIsNanException();
+
     try {
-      if (isNaN(+id)) return this.throwIsNanException()
       return await this.findOneTaskUseCase.execute(+id);
     } catch (error) {
       throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
@@ -84,15 +85,14 @@ export class TaskController implements CRUD<Task> {
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateTaskDto: UpdateTaskDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+    if (isNaN(+id)) throw this.throwIsNanException();
+
+    const input = { id: +id, ...updateTaskDto };
+    const isStatusValid = input.status in TaskEnumStatus;
+    if (!isStatusValid) throw this.throwErrorIfInvalidStatus();
+
     try {
-      if (isNaN(+id)) return this.throwIsNanException()
-      const input = { id: +id, ...updateTaskDto };
-      const isStatusValid = input.status in TaskEnumStatus;
-      if (!isStatusValid) return this.throwErrorIfInvalidStatus();
       return await this.createTaskUseCase.execute(input);
     } catch (error) {
       throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
@@ -101,8 +101,9 @@ export class TaskController implements CRUD<Task> {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
+    if (isNaN(+id)) throw this.throwIsNanException();
+
     try {
-      if (isNaN(+id)) return this.throwIsNanException()
       return await this.removeTaskUseCase.execute(+id);
     } catch (error) {
       throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
@@ -110,16 +111,16 @@ export class TaskController implements CRUD<Task> {
   }
 
   private throwIsNanException() {
-      return new HttpException(
-        'Id attribute must be a number',
-        HttpStatus.BAD_REQUEST,
-      );
+    return new HttpException(
+      'Id attribute must be a number',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 
   private throwErrorIfInvalidStatus() {
-      return new HttpException(
-        'Status should be "PENDING", "IN_PROGRESS" or "COMPLETED"',
-        HttpStatus.BAD_REQUEST,
-      );
+    return new HttpException(
+      'Status should be "PENDING", "IN_PROGRESS" or "COMPLETED"',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }
