@@ -10,7 +10,9 @@ import {
   Patch,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { FindOptionsOrderValue, Like } from 'typeorm';
 import { CRUD } from '../../../core/interfaces/crud.interface';
 import { CreateTaskDto } from '../../dto/create-task.dto';
@@ -58,6 +60,7 @@ export class TaskController implements CRUD<Task> {
     @Query('search') search?: string,
     @Query('orderBy') orderBy?: keyof Task,
     @Query('order') order?: FindOptionsOrderValue,
+    @Req() req?: Request,
   ) {
     try {
       const take = parseInt(perPage);
@@ -66,13 +69,16 @@ export class TaskController implements CRUD<Task> {
       const orderOptions = this.getOrderParams(orderBy, order);
       const fiveMinutes = 1000 * 60 * 5;
 
-      return await this.findAllTaskUseCase.execute({
-        take,
-        skip,
-        cache: fiveMinutes,
-        where,
-        order: orderOptions,
-      });
+      return await this.findAllTaskUseCase.execute(
+        {
+          take,
+          skip,
+          cache: fiveMinutes,
+          where,
+          order: orderOptions,
+        },
+        req,
+      );
     } catch (error) {
       throw new HttpException(
         {

@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PageDto } from '../../../core/dto/Page.dto';
+import { PageDto } from '../../../core/dto/page.dto';
 import { CreateTaskDto } from '../../../task/dto/create-task.dto';
 import { UpdateTaskDto } from '../../../task/dto/update-task.dto';
 import { Task } from '../../../task/entities/task.entity';

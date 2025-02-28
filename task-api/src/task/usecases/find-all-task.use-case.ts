@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express';
+import { PageLinkDto } from 'src/core/dto/page-link.dto';
 import {
   DataSource,
   FindManyOptions,
   FindOptionsOrder,
   FindOptionsWhere,
 } from 'typeorm';
-import { PageDto } from '../../core/dto/Page.dto';
-import { PageMetaDto } from '../../core/dto/PageMeta.dto';
-import { PageOptionsDto } from '../../core/dto/PageOptions.dto';
+import { PageMetaDto } from '../../core/dto/page-meta.dto';
+import { PageOptionsDto } from '../../core/dto/page-options.dto';
+import { PageDto } from '../../core/dto/page.dto';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from '../persistence/task.repository';
 
@@ -20,7 +22,10 @@ export class FindAllTaskUseCase {
     private readonly dataSource: DataSource,
   ) {}
 
-  async execute(params?: FindManyOptions<Task>): Promise<PageDto<Task>> {
+  async execute(
+    params?: FindManyOptions<Task>,
+    req?: Request,
+  ): Promise<PageDto<Task>> {
     const pageOptionsDto = new PageOptionsDto<Task>(params);
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -32,16 +37,14 @@ export class FindAllTaskUseCase {
     const offsetClause = this.buildOffsetClause(pageOptionsDto.skip);
 
     const query = `
-      SELECT * FROM task
-      ${whereClause}
-      ${orderClause}
-      ${limitClause}
-      ${offsetClause}
+      SELECT *
+      FROM task ${whereClause} ${orderClause} ${limitClause}
+        ${offsetClause}
     `;
 
     const countQuery = `
-      SELECT COUNT(*) FROM task
-      ${whereClause}
+      SELECT COUNT(*)
+      FROM task ${whereClause}
     `;
 
     const [entities, totalItems] = await Promise.all([
@@ -50,11 +53,13 @@ export class FindAllTaskUseCase {
     ]);
 
     const pageMetaDto = new PageMetaDto({
-      items_count: totalItems,
+      items_count: totalItems[0].count,
       pageOptions: params,
     });
 
-    return new PageDto(entities, pageMetaDto);
+    const pageLinkDto = new PageLinkDto(pageMetaDto, req);
+
+    return new PageDto(entities, pageMetaDto, pageLinkDto);
   }
 
   private toSnakeCase(s: string) {
@@ -71,6 +76,7 @@ export class FindAllTaskUseCase {
     const whereQuery = `WHERE ${whereClauseObjectKeys
       .map((key) => `${this.toSnakeCase(key)} LIKE %${whereOptions[key]}%`)
       .join(' AND ')}`;
+
     return shouldIncludeWhereClause ? whereQuery : '';
   }
 

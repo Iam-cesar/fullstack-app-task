@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource, FindOptionsOrder } from 'typeorm';
-import { PageDto } from '../../core/dto/Page.dto';
-import { PageMetaDto } from '../../core/dto/PageMeta.dto';
-import { PageOptionsDto } from '../../core/dto/PageOptions.dto';
+import { PageDto } from '../../core/dto/page.dto';
+import { PageMetaDto } from '../../core/dto/page-meta.dto';
+import { PageOptionsDto } from '../../core/dto/page-options.dto';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from '../persistence/task.repository';
 import { FindAllTaskUseCase } from './find-all-task.use-case';
