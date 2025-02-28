@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { DataSource, FindOptionsOrder } from 'typeorm';
 import { PageDto } from '../../core/dto/Page.dto';
 import { PageMetaDto } from '../../core/dto/PageMeta.dto';
 import { PageOptionsDto } from '../../core/dto/PageOptions.dto';
@@ -10,6 +11,7 @@ import { FindAllTaskUseCase } from './find-all-task.use-case';
 describe('FindAllTaskUseCase', () => {
   let findAllTaskUseCase: FindAllTaskUseCase;
   let taskRepository: TaskRepository;
+  let dataSource: DataSource;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,11 +23,22 @@ describe('FindAllTaskUseCase', () => {
             findAndCount: jest.fn(),
           },
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue({
+              connect: jest.fn(),
+              query: jest.fn(),
+              release: jest.fn(),
+            }),
+          },
+        },
       ],
     }).compile();
 
     findAllTaskUseCase = module.get<FindAllTaskUseCase>(FindAllTaskUseCase);
     taskRepository = module.get<TaskRepository>(getRepositoryToken(Task));
+    dataSource = module.get<DataSource>(DataSource);
   });
 
   it('should be defined', () => {
@@ -43,14 +56,38 @@ describe('FindAllTaskUseCase', () => {
     });
 
     jest
-      .spyOn(taskRepository, 'findAndCount')
-      .mockResolvedValue([tasks, totalItems]);
+      .spyOn(dataSource.createQueryRunner(), 'query')
+      .mockResolvedValueOnce(tasks)
+      .mockResolvedValueOnce(totalItems);
 
     const result = await findAllTaskUseCase.execute(params);
 
-    expect(taskRepository.findAndCount).toHaveBeenCalledWith({
-      ...pageOptionsDto,
-    });
     expect(result).toEqual(new PageDto(tasks, pageMetaDto));
+  });
+
+  it('should build correct where clause', () => {
+    const whereOptions = { title: 'test' };
+    const whereClause = findAllTaskUseCase['buildWhereClause'](whereOptions);
+    expect(whereClause).toBe('WHERE title LIKE %test%');
+  });
+
+  it('should build correct order clause', () => {
+    const orderOptions: FindOptionsOrder<Task> | FindOptionsOrder<Task>[] = {
+      title: 'ASC',
+    };
+    const orderClause = findAllTaskUseCase['buildOrderClause'](orderOptions);
+    expect(orderClause).toBe('ORDER BY title ASC');
+  });
+
+  it('should build correct limit clause', () => {
+    const limitOptions = 10;
+    const limitClause = findAllTaskUseCase['buildLimitClause'](limitOptions);
+    expect(limitClause).toBe('LIMIT 10');
+  });
+
+  it('should build correct offset clause', () => {
+    const offsetOptions = 5;
+    const offsetClause = findAllTaskUseCase['buildOffsetClause'](offsetOptions);
+    expect(offsetClause).toBe('OFFSET 5');
   });
 });
