@@ -3,7 +3,7 @@ import useCreateTaskFormModal from './useCreateTaskFormModal';
 
 const CreateTaskFormModal = () => {
   const {
-    isLoading,
+    isPending,
     isPayloadValid,
     onFormSubmit,
     showCreateFormModal,
@@ -54,10 +54,10 @@ const CreateTaskFormModal = () => {
           <Button
             type="submit"
             className="inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white relative"
-            disabled={isLoading.CREATING || !isPayloadValid}
+            disabled={isPending || !isPayloadValid}
           >
             criar tarefa
-            {isLoading.CREATING ? (
+            {isPending ? (
               <span className="absolute size-5 rounded-full block border-4 bg-white border-black border-e-transparent -top-2 -right-2 animate-spin" />
             ) : null}
           </Button>

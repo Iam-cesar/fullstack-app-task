@@ -1,10 +1,11 @@
 import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { TaskEnumStatus } from 'src/task/entities/task.enum';
 import { PageDto } from '../../../core/dto/Page.dto';
 import { CreateTaskDto } from '../../../task/dto/create-task.dto';
+import { UpdateTaskDto } from '../../../task/dto/update-task.dto';
 import { Task } from '../../../task/entities/task.entity';
+import { TaskEnumStatus } from '../../../task/entities/task.enum';
 import { CreateTaskUseCase } from '../../../task/usecases/create-task.use-case';
 import { FindAllTaskUseCase } from '../../../task/usecases/find-all-task.use-case';
 import { FindOneTaskUseCase } from '../../../task/usecases/find-one-task.use-case';
@@ -73,9 +74,7 @@ describe('TaskController', () => {
         description: '',
         status: TaskEnumStatus.PENDING,
       };
-      jest
-        .spyOn(createTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Error'));
+      jest.spyOn(createTaskUseCase, 'execute').mockRejectedValue(new Error());
 
       await expect(controller.create(createTaskDto)).rejects.toThrow(
         HttpException,
@@ -108,9 +107,7 @@ describe('TaskController', () => {
     });
 
     it('should throw an error if finding all tasks fails', async () => {
-      jest
-        .spyOn(findAllTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Error'));
+      jest.spyOn(findAllTaskUseCase, 'execute').mockRejectedValue(new Error());
 
       await expect(controller.findAll()).rejects.toThrow(HttpException);
     });
@@ -136,9 +133,7 @@ describe('TaskController', () => {
     });
 
     it('should throw an error if task is not found', async () => {
-      jest
-        .spyOn(findOneTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Error'));
+      jest.spyOn(findOneTaskUseCase, 'execute').mockRejectedValue(new Error());
 
       await expect(controller.findOne('1')).rejects.toThrow(HttpException);
     });
@@ -146,14 +141,17 @@ describe('TaskController', () => {
 
   describe('update', () => {
     it('should update a task', async () => {
-      const updateTaskDto = { title: 'Updated Task' };
+      const updateTaskDto: UpdateTaskDto = {
+        title: 'Updated Task',
+        status: TaskEnumStatus.PENDING,
+      };
       const result: Task = {
         id: 1,
-        ...updateTaskDto,
+        title: updateTaskDto.title,
         description: '',
-        status: 'PENDING',
         createdAt: '',
         updatedAt: '',
+        status: TaskEnumStatus.PENDING,
       };
       jest.spyOn(createTaskUseCase, 'execute').mockResolvedValue(result);
 
@@ -165,9 +163,7 @@ describe('TaskController', () => {
     });
 
     it('should throw an error if update fails', async () => {
-      jest
-        .spyOn(createTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Error'));
+      jest.spyOn(createTaskUseCase, 'execute').mockRejectedValue(new Error());
 
       await expect(controller.update('1', {})).rejects.toThrow(HttpException);
     });
@@ -193,9 +189,7 @@ describe('TaskController', () => {
     });
 
     it('should throw an error if remove fails', async () => {
-      jest
-        .spyOn(removeTaskUseCase, 'execute')
-        .mockRejectedValue(new Error('Error'));
+      jest.spyOn(removeTaskUseCase, 'execute').mockRejectedValue(new Error());
 
       await expect(controller.remove('1')).rejects.toThrow(HttpException);
     });

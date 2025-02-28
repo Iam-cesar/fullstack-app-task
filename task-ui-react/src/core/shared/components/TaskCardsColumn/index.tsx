@@ -19,10 +19,10 @@ const TaskCardsColumn = ({ tasks, sectionTitle }: TaskCardsColumnProps) => {
   const id = taskStatus[threatedSectionTitle as keyof typeof taskStatus];
 
   return (
-    <div className="grid-cols-1 gap-4 flex flex-col">
-      <p className="font-semibold text-xl text-black">{sectionTitle}</p>
+    <Droppable id={id}>
+      <div className="grid-cols-1 gap-4 flex flex-col">
+        <p className="font-semibold text-xl text-black">{sectionTitle}</p>
 
-      <Droppable id={id}>
         <>
           {tasks?.map((task) => (
             <Draggable key={task.id} id={task.id.toString()}>
@@ -30,8 +30,8 @@ const TaskCardsColumn = ({ tasks, sectionTitle }: TaskCardsColumnProps) => {
             </Draggable>
           ))}
         </>
-      </Droppable>
-    </div>
+      </div>
+    </Droppable>
   );
 };
 

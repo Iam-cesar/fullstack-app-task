@@ -1,5 +1,5 @@
 import { DragEndEvent } from '@dnd-kit/core';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import useGlobalContext from '../../../../core/hooks/useGlobalContext';
 import useTaskService from '../../../../core/shared/hooks/useTaskService';
 import { TaskStatus } from '../../types/ITask.tsx';
@@ -7,21 +7,11 @@ import { functionGetFilteredTasks } from '../../utils/getFilteredTasks.ts';
 
 const useListTaskSection = () => {
   const { tasks, updateGlobalState } = useGlobalContext();
-  const { getTasks } = useTaskService();
-  const hasFetchedInitialTasks = useRef(false);
+  const { useGetTasks, usePatchTask } = useTaskService();
 
-  const getInitialTasks = useCallback(async () => {
-    const tasks = await getTasks();
-    const filteredTasks = functionGetFilteredTasks(tasks);
-    updateGlobalState('tasks', filteredTasks);
-  }, [getTasks, updateGlobalState]);
+  const { mutate } = usePatchTask();
 
-  useEffect(() => {
-    if (!hasFetchedInitialTasks.current) {
-      getInitialTasks();
-      hasFetchedInitialTasks.current = true;
-    }
-  }, [getInitialTasks]);
+  useGetTasks();
 
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
@@ -39,9 +29,12 @@ const useListTaskSection = () => {
           .toString()
           .replace('droppable-', '') as TaskStatus;
 
-        const [selectedTask] = allTasks.filter(
+        const selectedTask = allTasks.find(
           (task) => task.id === Number(activeId),
         );
+
+        if (!selectedTask) return;
+
         const updatedSelectedTask = { ...selectedTask, status: overId };
 
         const tasksWithoutSelected = allTasks.filter(
@@ -53,9 +46,19 @@ const useListTaskSection = () => {
         const filteredTasks = functionGetFilteredTasks(updatedTasks);
 
         updateGlobalState('tasks', filteredTasks);
+
+        if (selectedTask.status !== updatedSelectedTask.status) {
+          mutate(updatedSelectedTask);
+        }
       }
     },
-    [tasks.completed, tasks.inProgress, tasks.pending, updateGlobalState],
+    [
+      mutate,
+      tasks.completed,
+      tasks.inProgress,
+      tasks.pending,
+      updateGlobalState,
+    ],
   );
 
   return {
