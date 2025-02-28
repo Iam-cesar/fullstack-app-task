@@ -44,8 +44,10 @@ export class FindAllTaskUseCase {
       ${whereClause}
     `;
 
-    const entities = await queryRunner.query(query);
-    const totalItems = await queryRunner.query(countQuery);
+    const [entities, totalItems] = await Promise.all([
+      queryRunner.query(query),
+      queryRunner.query(countQuery),
+    ]);
 
     const pageMetaDto = new PageMetaDto({
       items_count: totalItems,

@@ -64,11 +64,12 @@ export class TaskController implements CRUD<Task> {
       const skip = parseInt(page);
       const where = search ? { title: Like(`%${search}%`) } : {};
       const orderOptions = this.getOrderParams(orderBy, order);
+      const fiveMinutes = 1000 * 60 * 5;
 
       return await this.findAllTaskUseCase.execute({
         take,
         skip,
-        cache: 5000,
+        cache: fiveMinutes,
         where,
         order: orderOptions,
       });
