@@ -22,6 +22,15 @@ import { FindAllTaskUseCase } from '../../usecases/find-all-task.use-case';
 import { FindOneTaskUseCase } from '../../usecases/find-one-task.use-case';
 import { RemoveTaskUseCase } from '../../usecases/remove-task.use-case';
 
+const TASK_ORDER_OPTIONS = [
+  'id',
+  'title',
+  'description',
+  'status',
+  'createdAt',
+  'updatedAt',
+];
+
 @Controller('task')
 export class TaskController implements CRUD<Task> {
   constructor(
@@ -47,19 +56,22 @@ export class TaskController implements CRUD<Task> {
     @Query('perPage') perPage?: string,
     @Query('page') page?: string,
     @Query('search') search?: string,
+    @Query('orderBy') orderBy?: keyof Task,
     @Query('order') order?: FindOptionsOrderValue,
   ) {
     try {
       const take = parseInt(perPage);
       const skip = parseInt(page);
       const where = search ? { title: Like(`%${search}%`) } : {};
+      const orderOptions = this.getOrderParams(orderBy, order);
+      const fiveMinutes = 1000 * 60 * 5;
 
       return await this.findAllTaskUseCase.execute({
         take,
         skip,
-        cache: 5000,
+        cache: fiveMinutes,
         where,
-        order: { createdAt: order },
+        order: orderOptions,
       });
     } catch (error) {
       throw new HttpException(
@@ -122,5 +134,14 @@ export class TaskController implements CRUD<Task> {
       'Status should be "PENDING", "IN_PROGRESS" or "COMPLETED"',
       HttpStatus.BAD_REQUEST,
     );
+  }
+
+  private getOrderParams(orderBy: keyof Task, order: FindOptionsOrderValue) {
+    const orderOptions = {};
+
+    if (orderBy && TASK_ORDER_OPTIONS.includes(orderBy)) {
+      orderOptions[orderBy] = order;
+    }
+    return orderOptions;
   }
 }
