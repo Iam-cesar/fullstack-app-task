@@ -1,45 +1,74 @@
-import { useCallback, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { taskService } from '../../../infra/services/taskService';
+import useGlobalContext from '../../hooks/useGlobalContext';
 import { Task, TaskPayload } from '../types/ITask';
+import { functionGetFilteredTasks } from '../utils/getFilteredTasks';
 
 const useTaskService = () => {
-  const [isLoading, setIsLoading] = useState({
-    CREATING: false,
-    FETCHING: false,
-  });
+  const queryClient = useQueryClient();
+  const { updateGlobalState, tasks } = useGlobalContext();
 
   const getTasks = useCallback(async (): Promise<Task[]> => {
     try {
-      setIsLoading((prev) => ({ ...prev, FETCHING: true }));
       const { data } = await taskService.getTasks();
+      const filteredTasks = functionGetFilteredTasks(data);
+      updateGlobalState('tasks', filteredTasks);
       return data;
     } catch (error) {
       console.log('🚀 ~ error:', error);
       return [];
-    } finally {
-      setIsLoading((prev) => ({ ...prev, FETCHING: false }));
     }
-  }, []);
+  }, [updateGlobalState]);
 
   const postTask = useCallback(
-    async (payload: TaskPayload): Promise<Task | null> => {
+    async (payload: TaskPayload): Promise<void> => {
       try {
-        setIsLoading((prev) => ({ ...prev, CREATING: true }));
-        return await taskService.postTask(payload);
+        const task = await taskService.postTask(payload);
+        if (task?.id) {
+          updateGlobalState('tasks', [task, ...(tasks.pending || [])]);
+        }
+        updateGlobalState('isCreateTaskModalOpen', false);
       } catch (error) {
         console.log('🚀 ~ error:', error);
-        return null;
-      } finally {
-        setIsLoading((prev) => ({ ...prev, CREATING: false }));
       }
     },
-    [],
+    [tasks.pending, updateGlobalState],
+  );
+
+  const patchTask = useCallback(
+    async (payload: Task): Promise<void> => {
+      try {
+        await taskService.patchTask(payload);
+        updateGlobalState('isCreateTaskModalOpen', false);
+      } catch (error) {
+        console.log('🚀 ~ error:', error);
+      }
+    },
+    [updateGlobalState],
   );
 
   return {
-    isLoading,
-    getTasks,
-    postTask,
+    useGetTasks: () =>
+      useQuery({
+        queryFn: getTasks,
+        queryKey: ['getTasks'],
+        staleTime: 1000 * 60 * 5,
+      }),
+
+    usePostTask: () =>
+      useMutation({
+        mutationFn: postTask,
+        onSuccess: () =>
+          queryClient.invalidateQueries({
+            queryKey: ['getTasks'],
+          }),
+      }),
+
+    usePatchTask: () =>
+      useMutation({
+        mutationFn: patchTask,
+      }),
   };
 };
 

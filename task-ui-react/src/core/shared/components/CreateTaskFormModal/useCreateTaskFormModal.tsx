@@ -10,9 +10,10 @@ const initialPayloadValue = {
 };
 
 const useCreateTaskFormModal = () => {
-  const { postTask, isLoading } = useTaskService();
-  const { isCreateTaskModalOpen, tasks, updateGlobalState } =
-    useGlobalContext();
+  const { usePostTask } = useTaskService();
+  const { isCreateTaskModalOpen } = useGlobalContext();
+
+  const { mutateAsync, isPending } = usePostTask();
 
   const [payload, setPayload] = useState<TaskPayload>(initialPayloadValue);
 
@@ -26,11 +27,6 @@ const useCreateTaskFormModal = () => {
   const isPayloadValid =
     isPayloadTitleLengthValid && isPayloadDescriptionLengthValid;
 
-  const handleCreateTask = useCallback(
-    async () => await postTask(payload),
-    [payload, postTask],
-  );
-
   const clearInputValue = useCallback(
     () => setPayload(initialPayloadValue),
     [],
@@ -39,16 +35,14 @@ const useCreateTaskFormModal = () => {
   const onFormSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const task = await handleCreateTask();
-      if (task?.id) updateGlobalState('tasks', tasks.pending.concat(task));
-      updateGlobalState('isCreateTaskModalOpen', false);
+      await mutateAsync(payload);
       clearInputValue();
     },
-    [handleCreateTask, updateGlobalState, clearInputValue, tasks],
+    [mutateAsync, payload, clearInputValue],
   );
 
   return {
-    isLoading,
+    isPending,
     showCreateFormModal,
     isPayloadValid,
     onFormSubmit,
