@@ -2,8 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource, FindOptionsOrder } from 'typeorm';
 import { PageDto } from '../../core/dto/page.dto';
-import { PageMetaDto } from '../../core/dto/page-meta.dto';
-import { PageOptionsDto } from '../../core/dto/page-options.dto';
+import { BaseUrlFactory } from '../../core/factories/base-url.factory';
+import { PageLinkFactory } from '../../core/factories/page-link.factory';
+import { PageMetaFactory } from '../../core/factories/page-meta.factory';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from '../persistence/task.repository';
 import { FindAllTaskUseCase } from './find-all-task.use-case';
@@ -47,13 +48,22 @@ describe('FindAllTaskUseCase', () => {
 
   it('should return a PageDto with tasks and meta data', async () => {
     const tasks = [new Task(), new Task()];
-    const totalItems = 2;
+    const totalItems = [{ count: 2 }];
     const params = {};
-    const pageOptionsDto = new PageOptionsDto<Task>(params);
-    const pageMetaDto = new PageMetaDto({
-      items_count: totalItems,
+    const req = {
+      get: () => undefined,
+      protocol: undefined,
+      baseUrl: undefined,
+    } as any;
+
+    const baseUrl = new BaseUrlFactory(req);
+
+    const pageMetaDto = new PageMetaFactory({
+      items_count: totalItems[0].count,
       pageOptions: params,
     });
+
+    const pageLinks = new PageLinkFactory<Task>(pageMetaDto, baseUrl.link);
 
     jest
       .spyOn(dataSource.createQueryRunner(), 'query')
@@ -62,7 +72,7 @@ describe('FindAllTaskUseCase', () => {
 
     const result = await findAllTaskUseCase.execute(params);
 
-    expect(result).toEqual(new PageDto(tasks, pageMetaDto));
+    expect(result).toEqual(new PageDto(tasks, pageMetaDto, pageLinks));
   });
 
   it('should build correct where clause', () => {

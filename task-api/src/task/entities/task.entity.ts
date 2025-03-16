@@ -4,7 +4,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-
 } from 'typeorm';
 import { TaskEnumKeys, TaskEnumStatus } from './task.enum';
 
@@ -23,8 +22,8 @@ export class Task {
   status: TaskEnumKeys;
 
   @CreateDateColumn({ name: 'created_at', nullable: false })
-  createdAt: string;
+  created_at: string;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  updated_at: string;
 }

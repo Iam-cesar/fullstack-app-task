@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { PageLinkDto } from 'src/core/dto/page-link.dto';
 import {
   DataSource,
   FindManyOptions,
   FindOptionsOrder,
   FindOptionsWhere,
 } from 'typeorm';
-import { PageMetaDto } from '../../core/dto/page-meta.dto';
-import { PageOptionsDto } from '../../core/dto/page-options.dto';
 import { PageDto } from '../../core/dto/page.dto';
+import { BaseUrlFactory } from '../../core/factories/base-url.factory';
+import { PageLinkFactory } from '../../core/factories/page-link.factory';
+import { PageMetaFactory } from '../../core/factories/page-meta.factory';
+import { PageOptionsFactory } from '../../core/factories/page-options.factory';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from '../persistence/task.repository';
 
@@ -26,7 +27,7 @@ export class FindAllTaskUseCase {
     params?: FindManyOptions<Task>,
     req?: Request,
   ): Promise<PageDto<Task>> {
-    const pageOptionsDto = new PageOptionsDto<Task>(params);
+    const pageOptionsDto = new PageOptionsFactory<Task>(params);
 
     const queryRunner = this.dataSource.createQueryRunner();
     queryRunner.connect();
@@ -52,12 +53,13 @@ export class FindAllTaskUseCase {
       queryRunner.query(countQuery),
     ]);
 
-    const pageMetaDto = new PageMetaDto({
+    const pageMetaDto = new PageMetaFactory({
       items_count: totalItems[0].count,
       pageOptions: params,
     });
 
-    const pageLinkDto = new PageLinkDto(pageMetaDto, req);
+    const baseUrl = new BaseUrlFactory(req);
+    const pageLinkDto = new PageLinkFactory(pageMetaDto, baseUrl.link);
 
     return new PageDto(entities, pageMetaDto, pageLinkDto);
   }
@@ -73,9 +75,7 @@ export class FindAllTaskUseCase {
 
     const whereClauseObjectKeys = Object.keys(whereOptions);
     const shouldIncludeWhereClause = whereClauseObjectKeys.length > 0;
-    const whereQuery = `WHERE ${whereClauseObjectKeys
-      .map((key) => `${this.toSnakeCase(key)} LIKE %${whereOptions[key]}%`)
-      .join(' AND ')}`;
+    const whereQuery = `WHERE ${whereClauseObjectKeys.map((key) => `${this.toSnakeCase(key)} LIKE %${whereOptions[key]}%`).join(' AND ')}`;
 
     return shouldIncludeWhereClause ? whereQuery : '';
   }

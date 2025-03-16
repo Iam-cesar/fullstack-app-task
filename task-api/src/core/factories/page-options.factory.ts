@@ -1,7 +1,7 @@
 import { FindManyOptions, FindOptionsOrder, FindOptionsWhere } from 'typeorm';
 import { TOTAL_ITEMS_PER_PAGE } from '../constants';
 
-export class PageOptionsDto<T> implements FindManyOptions<T> {
+export class PageOptionsFactory<T> implements FindManyOptions<T> {
   readonly skip?: number;
   readonly take?: number;
   readonly order?: FindOptionsOrder<T>;
@@ -15,7 +15,7 @@ export class PageOptionsDto<T> implements FindManyOptions<T> {
   }
 
   private handleTakeParam(take: number | undefined) {
-    return take ? take : TOTAL_ITEMS_PER_PAGE;
+    return take ?? TOTAL_ITEMS_PER_PAGE;
   }
 
   private handleSkipParam(skip: number | undefined) {

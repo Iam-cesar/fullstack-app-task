@@ -24,6 +24,12 @@ export interface IApiResponse<T> {
     has_next_page: boolean;
   };
   data: T;
+  links: {
+    first_page: string;
+    last_page: string;
+    previous_page_link: string;
+    next_page_link: string;
+  };
 }
 
 export interface IFilteredTaskPerStatus {

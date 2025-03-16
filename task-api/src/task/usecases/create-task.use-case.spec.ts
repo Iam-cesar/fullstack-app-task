@@ -40,8 +40,8 @@ describe('CreateTaskUseCase', () => {
       ...input,
       id: 0,
       status: 'PENDING',
-      createdAt: '',
-      updatedAt: '',
+      created_at: '',
+      updated_at: '',
     };
 
     jest.spyOn(taskRepository, 'create').mockReturnValue(task);

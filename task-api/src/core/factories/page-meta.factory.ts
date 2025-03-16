@@ -1,7 +1,7 @@
 import { TOTAL_ITEMS_PER_PAGE } from '../constants';
-import { PageMetaDtoParameters } from './page-meta-parameters.dto';
+import { PageMetaDtoParameters } from '../interfaces/page-meta-parameters.dto';
 
-export class PageMetaDto<T> {
+export class PageMetaFactory<T> {
   readonly page: number;
   readonly per_page: number;
   readonly items_count: number;
@@ -12,6 +12,7 @@ export class PageMetaDto<T> {
   constructor({ pageOptions, items_count }: PageMetaDtoParameters<T>) {
     this.page = pageOptions.skip || 1;
     this.per_page = pageOptions.take || TOTAL_ITEMS_PER_PAGE;
+
     this.items_count = items_count;
     this.page_count = Math.ceil(this.items_count / this.per_page);
 

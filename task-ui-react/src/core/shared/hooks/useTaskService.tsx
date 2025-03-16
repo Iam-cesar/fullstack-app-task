@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import { taskService } from '../../../infra/services/taskService';
 import useGlobalContext from '../../hooks/useGlobalContext';
 import { Task, TaskPayload } from '../types/ITask';
-import { functionGetFilteredTasks } from '../utils/getFilteredTasks';
 
 const useTaskService = () => {
   const queryClient = useQueryClient();
@@ -12,14 +11,13 @@ const useTaskService = () => {
   const getTasks = useCallback(async (): Promise<Task[]> => {
     try {
       const { data } = await taskService.getTasks();
-      const filteredTasks = functionGetFilteredTasks(data);
-      updateGlobalState('tasks', filteredTasks);
+
       return data;
     } catch (error) {
       console.log('🚀 ~ error:', error);
       return [];
     }
-  }, [updateGlobalState]);
+  }, []);
 
   const postTask = useCallback(
     async (payload: TaskPayload): Promise<void> => {

@@ -60,8 +60,8 @@ describe('TaskController', () => {
         id: 1,
         ...createTaskDto,
         status: 'PENDING',
-        createdAt: '',
-        updatedAt: '',
+        created_at: '',
+        updated_at: '',
       };
       jest.spyOn(createTaskUseCase, 'execute').mockResolvedValue(result);
 
@@ -90,14 +90,15 @@ describe('TaskController', () => {
           title: 'Test Task',
           description: '',
           status: 'PENDING',
-          createdAt: '',
-          updatedAt: '',
+          created_at: '',
+          updated_at: '',
         },
       ];
 
       const paginationModel: PageDto<Task> = {
         meta: undefined,
         data: result,
+        links: undefined,
       };
       jest
         .spyOn(findAllTaskUseCase, 'execute')
@@ -120,8 +121,8 @@ describe('TaskController', () => {
         title: 'Test Task',
         description: '',
         status: 'PENDING',
-        createdAt: '',
-        updatedAt: '',
+        created_at: '',
+        updated_at: '',
       };
       jest.spyOn(findOneTaskUseCase, 'execute').mockResolvedValue(result);
 
@@ -149,8 +150,8 @@ describe('TaskController', () => {
         id: 1,
         title: updateTaskDto.title,
         description: '',
-        createdAt: '',
-        updatedAt: '',
+        created_at: '',
+        updated_at: '',
         status: TaskEnumStatus.PENDING,
       };
       jest.spyOn(createTaskUseCase, 'execute').mockResolvedValue(result);
@@ -176,8 +177,8 @@ describe('TaskController', () => {
         title: 'Test Task',
         description: '',
         status: 'PENDING',
-        createdAt: '',
-        updatedAt: '',
+        created_at: '',
+        updated_at: '',
       };
       jest.spyOn(removeTaskUseCase, 'execute').mockResolvedValue(result);
 

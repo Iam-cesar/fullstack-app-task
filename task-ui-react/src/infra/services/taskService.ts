@@ -12,13 +12,31 @@ const objectToReturn: IApiResponse<Task[]> = {
     has_next_page: false,
   },
   data: [],
+  links: {
+    first_page: '',
+    last_page: '',
+    previous_page_link: '',
+    next_page_link: '',
+  },
 };
 
 export const taskService = {
-  getTasks: async (): Promise<IApiResponse<Task[]>> => {
+  getTasks: async (
+    orderBy?: keyof Task,
+    order?: 'ASC' | 'DESC' | 'asc' | 'desc' | -1 | 1,
+    page?: number,
+    per_page?: number,
+  ): Promise<IApiResponse<Task[]>> => {
     const {
       data: { data, meta },
-    } = await httpClient.get<IApiResponse<Task[]>>('/task');
+    } = await httpClient.get<IApiResponse<Task[]>>('/task', {
+      params: {
+        orderBy,
+        order,
+        page,
+        per_page,
+      },
+    });
 
     objectToReturn.data = data;
     objectToReturn.meta = meta;

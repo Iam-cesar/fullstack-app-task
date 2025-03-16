@@ -7,11 +7,9 @@ import { functionGetFilteredTasks } from '../../utils/getFilteredTasks.ts';
 
 const useListTaskSection = () => {
   const { tasks, updateGlobalState } = useGlobalContext();
-  const { useGetTasks, usePatchTask } = useTaskService();
+  const { usePatchTask } = useTaskService();
 
   const { mutate } = usePatchTask();
-
-  useGetTasks();
 
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {

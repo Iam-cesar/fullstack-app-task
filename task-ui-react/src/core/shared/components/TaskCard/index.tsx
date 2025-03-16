@@ -16,7 +16,7 @@ const TaskCard = ({ task }: ITaskCardProps) => {
   const status = taskStatus[task.status];
   const createdAt = Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'medium',
-  })?.format(new Date(task.createdAt));
+  })?.format(new Date(task.created_at));
 
   const handleClickOnTaskCard = useCallback(() => {
     console.log(task);
