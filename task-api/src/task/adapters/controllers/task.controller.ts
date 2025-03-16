@@ -13,7 +13,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { FindOptionsOrderValue, Like } from 'typeorm';
+import { FindOptionsOrderValue } from 'typeorm';
 import { CRUD } from '../../../core/interfaces/crud.interface';
 import { CreateTaskDto } from '../../dto/create-task.dto';
 import { UpdateTaskDto } from '../../dto/update-task.dto';
@@ -58,14 +58,14 @@ export class TaskController implements CRUD<Task> {
     @Query('perPage') perPage?: string,
     @Query('page') page?: string,
     @Query('search') search?: string,
-    @Query('orderBy') orderBy?: keyof Task,
+    @Query('order_by') orderBy?: keyof Task,
     @Query('order') order?: FindOptionsOrderValue,
     @Req() req?: Request,
   ) {
     try {
       const take = parseInt(perPage);
       const skip = parseInt(page);
-      const where = search ? { title: Like(`%${search}%`) } : {};
+      const where = search ? { title: `${search}` } : {};
       const orderOptions = this.getOrderParams(orderBy, order);
 
       return await this.findAllTaskUseCase.execute(
@@ -74,6 +74,7 @@ export class TaskController implements CRUD<Task> {
           skip,
           where,
           order: orderOptions,
+          cache: 1000 * 60 * 5,
         },
         req,
       );
@@ -94,7 +95,12 @@ export class TaskController implements CRUD<Task> {
     if (isNaN(+id)) throw this.throwIsNanException();
 
     try {
-      return await this.findOneTaskUseCase.execute(+id);
+      const task = await this.findOneTaskUseCase.execute(+id);
+      if (!task) {
+        throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
+      }
+
+      return task;
     } catch (error) {
       throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
     }

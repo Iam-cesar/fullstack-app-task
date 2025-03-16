@@ -46,14 +46,15 @@ describe('FindAllTaskUseCase', () => {
     expect(findAllTaskUseCase).toBeDefined();
   });
 
-  it('should return a PageDto with tasks and meta data', async () => {
+  it('should return a object with tasks and meta data', async () => {
     const tasks = [new Task(), new Task()];
     const totalItems = [{ count: 2 }];
     const params = {};
     const req = {
-      get: () => undefined,
-      protocol: undefined,
-      baseUrl: undefined,
+      get: () => 'testhost',
+      protocol: 'https',
+      baseUrl: '/baseUrl',
+      path: '/test',
     } as any;
 
     const baseUrl = new BaseUrlFactory(req);
@@ -63,14 +64,17 @@ describe('FindAllTaskUseCase', () => {
       pageOptions: params,
     });
 
-    const pageLinks = new PageLinkFactory<Task>(pageMetaDto, baseUrl.link);
+    const pageLinks = new PageLinkFactory<Task>(
+      pageMetaDto,
+      baseUrl.link,
+    ).getPageLinks();
 
     jest
       .spyOn(dataSource.createQueryRunner(), 'query')
       .mockResolvedValueOnce(tasks)
       .mockResolvedValueOnce(totalItems);
 
-    const result = await findAllTaskUseCase.execute(params);
+    const result = await findAllTaskUseCase.execute(params, req);
 
     expect(result).toEqual(new PageDto(tasks, pageMetaDto, pageLinks));
   });

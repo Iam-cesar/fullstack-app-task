@@ -19,7 +19,8 @@ export class FindOneTaskUseCase {
     try {
       const query = `SELECT * FROM task WHERE id = $1`;
       const result = await queryRunner.query(query, [id]);
-      return result[0] ?? null;
+
+      return result[0] || null;
     } finally {
       await queryRunner.release();
     }

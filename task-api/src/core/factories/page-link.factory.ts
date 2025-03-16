@@ -1,16 +1,16 @@
 import { PageMetaFactory } from './page-meta.factory';
 
 export class PageLinkFactory<T> {
-  public previous_page_link: string;
-  public next_page_link: string;
-  public first_page: string;
-  public last_page: string;
+  private previous_page_link: string;
+  private next_page_link: string;
+  private first_page: string;
+  private last_page: string;
 
   protected currentPage: number;
   protected totalOfPages: number;
 
-  protected baseUrl: string;
-  protected pageMeta: PageMetaFactory<T>;
+  private readonly baseUrl: string;
+  private readonly pageMeta: PageMetaFactory<T>;
 
   constructor(pageMeta: PageMetaFactory<T>, baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -18,11 +18,6 @@ export class PageLinkFactory<T> {
 
     this.currentPage = pageMeta.page;
     this.totalOfPages = Math.ceil(pageMeta.items_count / pageMeta.per_page);
-
-    this.first_page = this.buildFirstPageLink();
-    this.last_page = this.buildLastPageLink();
-    this.previous_page_link = this.buildPreviousPageLink();
-    this.next_page_link = this.buildNextPageLink();
   }
 
   private buildFirstPageLink(): string {
@@ -43,5 +38,14 @@ export class PageLinkFactory<T> {
     const hasNextPageLink = this.currentPage < this.totalOfPages;
     const nextPageLink = `${this.baseUrl}?page=${this.currentPage + 1}&perPage=${this.pageMeta.per_page}`;
     return hasNextPageLink ? nextPageLink : '';
+  }
+
+  public getPageLinks() {
+    return {
+      first_page: this.buildFirstPageLink(),
+      last_page: this.buildLastPageLink(),
+      previous_page_link: this.buildPreviousPageLink(),
+      next_page_link: this.buildNextPageLink(),
+    };
   }
 }

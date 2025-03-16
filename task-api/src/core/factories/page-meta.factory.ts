@@ -13,7 +13,7 @@ export class PageMetaFactory<T> {
     this.page = pageOptions.skip || 1;
     this.per_page = pageOptions.take || TOTAL_ITEMS_PER_PAGE;
 
-    this.items_count = items_count;
+    this.items_count = Number(items_count);
     this.page_count = Math.ceil(this.items_count / this.per_page);
 
     this.has_previous_page = this.page > 1;

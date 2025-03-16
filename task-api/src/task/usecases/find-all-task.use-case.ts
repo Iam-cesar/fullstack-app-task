@@ -24,44 +24,52 @@ export class FindAllTaskUseCase {
   ) {}
 
   async execute(
-    params?: FindManyOptions<Task>,
-    req?: Request,
+    params: FindManyOptions<Task>,
+    req: Request,
   ): Promise<PageDto<Task>> {
     const pageOptionsDto = new PageOptionsFactory<Task>(params);
 
     const queryRunner = this.dataSource.createQueryRunner();
     queryRunner.connect();
+    try {
+      const whereClause = this.buildWhereClause(pageOptionsDto.where);
+      const orderClause = this.buildOrderClause(pageOptionsDto.order);
+      const limitClause = this.buildLimitClause(pageOptionsDto.take);
+      const offsetClause = this.buildOffsetClause(pageOptionsDto.skip);
 
-    const whereClause = this.buildWhereClause(pageOptionsDto.where);
-    const orderClause = this.buildOrderClause(pageOptionsDto.order);
-    const limitClause = this.buildLimitClause(pageOptionsDto.take);
-    const offsetClause = this.buildOffsetClause(pageOptionsDto.skip);
-
-    const query = `
-      SELECT *
-      FROM task ${whereClause} ${orderClause} ${limitClause}
+      const query = `
+        SELECT *
+        FROM task
+        ${whereClause}
+        ${orderClause}
+        ${limitClause}
         ${offsetClause}
-    `;
+      `;
 
-    const countQuery = `
-      SELECT COUNT(*)
-      FROM task ${whereClause}
-    `;
+      const countQuery = `
+        SELECT COUNT(*)
+        FROM task ${whereClause}
+      `;
 
-    const [entities, totalItems] = await Promise.all([
-      queryRunner.query(query),
-      queryRunner.query(countQuery),
-    ]);
+      const [entities, totalItems] = await Promise.all([
+        queryRunner.query(query),
+        queryRunner.query(countQuery),
+      ]);
 
-    const pageMetaDto = new PageMetaFactory({
-      items_count: totalItems[0].count,
-      pageOptions: params,
-    });
+      const pageMetaDto = new PageMetaFactory({
+        items_count: totalItems[0].count,
+        pageOptions: params,
+      });
 
-    const baseUrl = new BaseUrlFactory(req);
-    const pageLinkDto = new PageLinkFactory(pageMetaDto, baseUrl.link);
+      const baseUrl = new BaseUrlFactory(req);
+      const pageLinkDto = new PageLinkFactory(pageMetaDto, `${baseUrl.link}`);
 
-    return new PageDto(entities, pageMetaDto, pageLinkDto);
+      return new PageDto(entities, pageMetaDto, pageLinkDto.getPageLinks());
+    } catch (error) {
+      return error;
+    } finally {
+      queryRunner.release();
+    }
   }
 
   private toSnakeCase(s: string) {
@@ -75,7 +83,9 @@ export class FindAllTaskUseCase {
 
     const whereClauseObjectKeys = Object.keys(whereOptions);
     const shouldIncludeWhereClause = whereClauseObjectKeys.length > 0;
-    const whereQuery = `WHERE ${whereClauseObjectKeys.map((key) => `${this.toSnakeCase(key)} LIKE %${whereOptions[key]}%`).join(' AND ')}`;
+    const whereQuery = `WHERE ${whereClauseObjectKeys
+      .map((key) => `${this.toSnakeCase(key)} LIKE '%${whereOptions[key]}%'`)
+      .join(' AND ')}`;
 
     return shouldIncludeWhereClause ? whereQuery : '';
   }
@@ -86,9 +96,11 @@ export class FindAllTaskUseCase {
     if (!orderOptions) return '';
     const orderClauseObjectKeys = Object.keys(orderOptions);
     const shouldIncludeOrderClause = orderClauseObjectKeys.length > 0;
-    const orderQuery = `ORDER BY ${Object.keys(orderOptions)
-      .map((key) => `${this.toSnakeCase(key)} ${orderOptions[key]}`)
-      .join(', ')}`;
+    const orderQuery = `
+      ORDER BY
+      ${Object.keys(orderOptions)
+        .map((key) => `${this.toSnakeCase(key)} ${orderOptions[key]}`)
+        .join(', ')}`;
 
     return shouldIncludeOrderClause ? orderQuery : '';
   }

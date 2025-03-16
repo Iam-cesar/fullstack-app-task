@@ -15,7 +15,7 @@ export class PageOptionsFactory<T> implements FindManyOptions<T> {
   }
 
   private handleTakeParam(take: number | undefined) {
-    return take ?? TOTAL_ITEMS_PER_PAGE;
+    return take || TOTAL_ITEMS_PER_PAGE;
   }
 
   private handleSkipParam(skip: number | undefined) {
