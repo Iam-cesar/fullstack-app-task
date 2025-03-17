@@ -5,7 +5,7 @@ import CreateTaskButton from '../Button';
 export const Topbar = () => {
   const { updateGlobalState, isCreateTaskModalOpen } = useGlobalContext();
 
-  const closeModals = useCallback(() => {
+  const closeModal = useCallback(() => {
     updateGlobalState('isCreateTaskModalOpen', false);
   }, [updateGlobalState]);
 
@@ -27,7 +27,7 @@ export const Topbar = () => {
               <li>
                 <button
                   className="text-gray-500 transition hover:text-gray-500/75"
-                  onClick={closeModals}
+                  onClick={closeModal}
                 >
                   Tarefas
                 </button>

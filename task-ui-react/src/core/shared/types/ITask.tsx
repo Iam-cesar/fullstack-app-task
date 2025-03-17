@@ -13,9 +13,17 @@ export interface TaskPayload {
 }
 
 export enum TaskStatus {
-  COMPLETED = 'COMPLETED',
-  PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'completed',
+  PENDING = 'pending',
+  IN_PROGRESS = 'inProgress',
 }
 
-export type TaskStatusKey = keyof typeof TaskStatus;
+export interface IGetTaskParams {
+  orderBy?: keyof Task;
+  order?: 'ASC' | 'DESC' | 'asc' | 'desc' | -1 | 1;
+  page?: number;
+  per_page?: number;
+  status?: TaskStatus;
+}
+
+export type TaskStatusKey = 'completed' | 'pending' | 'inProgress';

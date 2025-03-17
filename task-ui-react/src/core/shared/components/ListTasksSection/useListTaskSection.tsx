@@ -20,33 +20,37 @@ const useListTaskSection = () => {
           ...tasks.inProgress,
           ...tasks.completed,
         ];
+        try {
+          const activeId = active.id.toString().replace('draggable-', '');
 
-        const activeId = active.id.toString().replace('draggable-', '');
+          const overId = over.id
+            .toString()
+            .replace('droppable-', '') as TaskStatus;
 
-        const overId = over.id
-          .toString()
-          .replace('droppable-', '') as TaskStatus;
+          const selectedTask = allTasks.find(
+            (task) => task.id === Number(activeId),
+          );
 
-        const selectedTask = allTasks.find(
-          (task) => task.id === Number(activeId),
-        );
+          if (!selectedTask) return;
 
-        if (!selectedTask) return;
+          const updatedSelectedTask = { ...selectedTask, status: overId };
 
-        const updatedSelectedTask = { ...selectedTask, status: overId };
+          const tasksWithoutSelected = allTasks.filter(
+            (task) => task.id !== Number(activeId),
+          );
 
-        const tasksWithoutSelected = allTasks.filter(
-          (task) => task.id !== Number(activeId),
-        );
+          const updatedTasks = [...tasksWithoutSelected, updatedSelectedTask];
 
-        const updatedTasks = [...tasksWithoutSelected, updatedSelectedTask];
+          const filteredTasks = functionGetFilteredTasks(updatedTasks);
 
-        const filteredTasks = functionGetFilteredTasks(updatedTasks);
+          updateGlobalState('tasks', filteredTasks);
 
-        updateGlobalState('tasks', filteredTasks);
-
-        if (selectedTask.status !== updatedSelectedTask.status) {
-          mutate(updatedSelectedTask);
+          if (selectedTask.status !== updatedSelectedTask.status) {
+            mutate(updatedSelectedTask);
+          }
+        } catch (error) {
+          console.error(error);
+          return allTasks;
         }
       }
     },

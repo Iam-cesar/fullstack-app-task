@@ -1,5 +1,9 @@
 import { IApiResponse } from '../../core/shared/types/IGlobalTypes';
-import { Task, TaskPayload } from '../../core/shared/types/ITask';
+import {
+  IGetTaskParams,
+  Task,
+  TaskPayload,
+} from '../../core/shared/types/ITask';
 import { httpClient } from '../http';
 
 const objectToReturn: IApiResponse<Task[]> = {
@@ -21,12 +25,13 @@ const objectToReturn: IApiResponse<Task[]> = {
 };
 
 export const taskService = {
-  getTasks: async (
-    orderBy?: keyof Task,
-    order?: 'ASC' | 'DESC' | 'asc' | 'desc' | -1 | 1,
-    page?: number,
-    per_page?: number,
-  ): Promise<IApiResponse<Task[]>> => {
+  getTasks: async ({
+    order,
+    orderBy,
+    page,
+    per_page,
+    status,
+  }: IGetTaskParams): Promise<IApiResponse<Task[]>> => {
     const {
       data: { data, meta },
     } = await httpClient.get<IApiResponse<Task[]>>('/task', {
@@ -35,6 +40,7 @@ export const taskService = {
         order,
         page,
         per_page,
+        status,
       },
     });
 

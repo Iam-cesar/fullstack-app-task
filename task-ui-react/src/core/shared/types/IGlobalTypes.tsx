@@ -5,6 +5,7 @@ export interface IGlobalContextProps {
   tasks: IFilteredTaskPerStatus;
   isCreateTaskModalOpen: boolean;
   updateGlobalState: (key: TInitialGlobalContextKeys, value: unknown) => void;
+  setGlobalState: (value: React.SetStateAction<IInitialGlobalProps>) => void;
 }
 
 export interface IInitialGlobalProps {

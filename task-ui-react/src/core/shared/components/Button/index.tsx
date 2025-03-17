@@ -8,7 +8,7 @@ const Button = ({ children, ...props }: IButtonProps) => {
     <div className="relative *:rounded-md *:border-2 *:border-black *:text-black">
       <button
         {...props}
-        className="relative bg-white block px-5 py-2.5 text-sm font-medium transition hover:-translate-x-1 hover:-translate-y-1 z-10 hover:cursor-pointer"
+        className={`relative bg-white block px-5 py-2.5 text-sm font-medium transition hover:-translate-x-1 hover:-translate-y-1 z-10 hover:cursor-pointer ${props.className}`}
       >
         {children}
       </button>

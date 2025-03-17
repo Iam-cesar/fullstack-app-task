@@ -60,19 +60,23 @@ export class TaskController implements CRUD<Task> {
     @Query('search') search?: string,
     @Query('order_by') orderBy?: keyof Task,
     @Query('order') order?: FindOptionsOrderValue,
+    @Query('status') status?: TaskEnumStatus,
     @Req() req?: Request,
   ) {
     try {
       const take = parseInt(perPage);
       const skip = parseInt(page);
-      const where = search ? { title: `${search}` } : {};
+
       const orderOptions = this.getOrderParams(orderBy, order);
 
       return await this.findAllTaskUseCase.execute(
         {
           take,
           skip,
-          where,
+          where: {
+            title: search || '',
+            status: status || null,
+          },
           order: orderOptions,
           cache: 1000 * 60 * 5,
         },

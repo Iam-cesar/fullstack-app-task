@@ -1,10 +1,12 @@
-import { Task, TaskStatus } from '../../types/ITask';
+import { useCallback, useEffect } from 'react';
+import useGlobalContext from '../../../hooks/useGlobalContext';
+import useTaskService from '../../hooks/useTaskService';
+import { TaskStatus } from '../../types/ITask';
 import Draggable from '../Draggable';
 import Droppable from '../Droppable';
 import TaskCard from '../TaskCard';
 
 interface TaskCardsColumnProps {
-  tasks: Task[];
   sectionTitle: string;
 }
 
@@ -14,9 +16,29 @@ const taskStatus = {
   finalizadas: TaskStatus.COMPLETED,
 };
 
-const TaskCardsColumn = ({ tasks, sectionTitle }: TaskCardsColumnProps) => {
+const TaskCardsColumn = ({ sectionTitle }: TaskCardsColumnProps) => {
   const threatedSectionTitle = sectionTitle.replace(' ', '-').toLowerCase();
   const id = taskStatus[threatedSectionTitle as keyof typeof taskStatus];
+
+  const { setGlobalState, tasks } = useGlobalContext();
+  const { useGetTasks } = useTaskService();
+  const { data } = useGetTasks({ status: id });
+
+  const handleUpdateGlobalState = useCallback(
+    () =>
+      setGlobalState((prev) => ({
+        ...prev,
+        tasks: { ...prev.tasks, [id]: data },
+      })),
+    [data, id, setGlobalState],
+  );
+
+  useEffect(
+    function updateGlobalContextOnDataFetch() {
+      if (data) handleUpdateGlobalState();
+    },
+    [data, handleUpdateGlobalState],
+  );
 
   return (
     <Droppable id={id}>
@@ -24,7 +46,7 @@ const TaskCardsColumn = ({ tasks, sectionTitle }: TaskCardsColumnProps) => {
         <p className="font-semibold text-xl text-black">{sectionTitle}</p>
 
         <>
-          {tasks?.map((task) => (
+          {tasks?.[id]?.map((task) => (
             <Draggable key={task.id} id={task.id.toString()}>
               <TaskCard task={task} />
             </Draggable>

@@ -1,7 +1,7 @@
 export enum TaskEnumStatus {
-  PENDING = 'PENDING',
-  COMPLETED = 'COMPLETED',
-  IN_PROGRESS = 'IN_PROGRESS',
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  IN_PROGRESS = 'in_progress',
 }
 
-export type TaskEnumKeys = keyof typeof TaskEnumStatus;
+export type TaskEnumKeys = 'pending' | 'completed' | 'in_progress';

@@ -22,7 +22,9 @@ export const GlobalContextProvider = ({
   );
 
   return (
-    <GlobalContext.Provider value={{ ...globalState, updateGlobalState }}>
+    <GlobalContext.Provider
+      value={{ ...globalState, updateGlobalState, setGlobalState }}
+    >
       {children}
     </GlobalContext.Provider>
   );

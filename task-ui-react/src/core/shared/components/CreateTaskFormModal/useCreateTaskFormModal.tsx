@@ -11,7 +11,7 @@ const initialPayloadValue = {
 
 const useCreateTaskFormModal = () => {
   const { usePostTask } = useTaskService();
-  const { isCreateTaskModalOpen } = useGlobalContext();
+  const { isCreateTaskModalOpen, updateGlobalState } = useGlobalContext();
 
   const { mutateAsync, isPending } = usePostTask();
 
@@ -41,13 +41,19 @@ const useCreateTaskFormModal = () => {
     [mutateAsync, payload, clearInputValue],
   );
 
+  const closeModal = useCallback(() => {
+    updateGlobalState('isCreateTaskModalOpen', false);
+    clearInputValue();
+  }, [updateGlobalState, clearInputValue]);
+
   return {
-    isPending,
     showCreateFormModal,
     isPayloadValid,
-    onFormSubmit,
+    isPending,
     payload,
+    onFormSubmit,
     setPayload,
+    closeModal,
   };
 };
 

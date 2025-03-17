@@ -2,9 +2,9 @@ import { useCallback } from 'react';
 import { Task } from '../../../../core/shared/types/ITask';
 
 const taskStatus = {
-  COMPLETED: 'Finalizada',
-  PENDING: 'Pendente',
-  IN_PROGRESS: 'Em progresso',
+  completed: 'Finalizada',
+  pending: 'Pendente',
+  inProgress: 'Em progresso',
 };
 
 interface ITaskCardProps {

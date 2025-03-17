@@ -8,7 +8,9 @@ const Home = () => {
     <GlobalContextProvider>
       <section>
         <Topbar />
+
         <CreateTaskFormModal />
+
         <ListTasksSection />
       </section>
     </GlobalContextProvider>

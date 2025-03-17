@@ -3,16 +3,16 @@ import TaskCardsColumn from '../TaskCardsColumn/index.tsx';
 import useListTaskSection from './useListTaskSection.tsx';
 
 const ListTasksSection = () => {
-  const { tasks, onDragEnd } = useListTaskSection();
+  const { onDragEnd } = useListTaskSection();
 
   return (
     <DndContext collisionDetection={closestCorners} onDragEnd={onDragEnd}>
       <div className="mx-auto my-0 container p-4 grid gap-4 grid-cols-3">
-        <TaskCardsColumn sectionTitle="Pendentes" tasks={tasks.pending} />
+        <TaskCardsColumn sectionTitle="Pendentes" />
 
-        <TaskCardsColumn sectionTitle="Em progresso" tasks={tasks.inProgress} />
+        <TaskCardsColumn sectionTitle="Em progresso" />
 
-        <TaskCardsColumn sectionTitle="Finalizadas" tasks={tasks.completed} />
+        <TaskCardsColumn sectionTitle="Finalizadas" />
       </div>
     </DndContext>
   );
