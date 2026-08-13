@@ -4,6 +4,7 @@ import { Request } from 'express';
 import {
   DataSource,
   FindManyOptions,
+  FindOperator,
   FindOptionsOrder,
   FindOptionsWhere,
 } from 'typeorm';
@@ -11,6 +12,10 @@ import { PageLinkDto } from '../../core/dto/page-link.dto';
 import { PageMetaDto } from '../../core/dto/page-meta.dto';
 import { PageOptionsDto } from '../../core/dto/page-options.dto';
 import { PageDto } from '../../core/dto/page.dto';
+import {
+  buildSelectClause,
+  toColumnName,
+} from '../../core/utils/entity-columns';
 import { Task } from '../entities/task.entity';
 import { TaskRepository } from '../persistence/task.repository';
 
@@ -31,13 +36,18 @@ export class FindAllTaskUseCase {
     const queryRunner = this.dataSource.createQueryRunner();
     queryRunner.connect();
 
-    const whereClause = this.buildWhereClause(pageOptionsDto.where);
+    const queryParams: unknown[] = [];
+    const selectClause = buildSelectClause(this.dataSource, Task);
+    const whereClause = this.buildWhereClause(
+      pageOptionsDto.where,
+      queryParams,
+    );
     const orderClause = this.buildOrderClause(pageOptionsDto.order);
     const limitClause = this.buildLimitClause(pageOptionsDto.take);
     const offsetClause = this.buildOffsetClause(pageOptionsDto.skip);
 
     const query = `
-      SELECT *
+      SELECT ${selectClause}
       FROM task ${whereClause} ${orderClause} ${limitClause}
         ${offsetClause}
     `;
@@ -48,12 +58,12 @@ export class FindAllTaskUseCase {
     `;
 
     const [entities, totalItems] = await Promise.all([
-      queryRunner.query(query),
-      queryRunner.query(countQuery),
+      queryRunner.query(query, queryParams),
+      queryRunner.query(countQuery, queryParams),
     ]);
 
     const pageMetaDto = new PageMetaDto({
-      items_count: totalItems[0].count,
+      items_count: Number(totalItems[0].count),
       pageOptions: params,
     });
 
@@ -62,35 +72,48 @@ export class FindAllTaskUseCase {
     return new PageDto(entities, pageMetaDto, pageLinkDto);
   }
 
-  private toSnakeCase(s: string) {
-    return s.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
-  }
-
   private buildWhereClause(
     whereOptions: FindOptionsWhere<Task> | FindOptionsWhere<Task>[],
+    queryParams: unknown[],
   ) {
     if (!whereOptions) return '';
 
-    const whereClauseObjectKeys = Object.keys(whereOptions);
-    const shouldIncludeWhereClause = whereClauseObjectKeys.length > 0;
-    const whereQuery = `WHERE ${whereClauseObjectKeys
-      .map((key) => `${this.toSnakeCase(key)} LIKE %${whereOptions[key]}%`)
-      .join(' AND ')}`;
+    const conditions = Object.keys(whereOptions)
+      .map((key) => {
+        const columnName = toColumnName(this.dataSource, Task, key);
+        if (!columnName) return null;
 
-    return shouldIncludeWhereClause ? whereQuery : '';
+        const option = whereOptions[key];
+        queryParams.push(
+          option instanceof FindOperator ? option.value : option,
+        );
+
+        return `${columnName} LIKE $${queryParams.length}`;
+      })
+      .filter(Boolean);
+
+    return conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
   }
 
   private buildOrderClause(
     orderOptions: FindOptionsOrder<Task> | FindOptionsOrder<Task>[],
   ) {
     if (!orderOptions) return '';
-    const orderClauseObjectKeys = Object.keys(orderOptions);
-    const shouldIncludeOrderClause = orderClauseObjectKeys.length > 0;
-    const orderQuery = `ORDER BY ${Object.keys(orderOptions)
-      .map((key) => `${this.toSnakeCase(key)} ${orderOptions[key]}`)
-      .join(', ')}`;
 
-    return shouldIncludeOrderClause ? orderQuery : '';
+    const conditions = Object.keys(orderOptions)
+      .map((key) => {
+        const columnName = toColumnName(this.dataSource, Task, key);
+        if (!columnName) return null;
+
+        return `${columnName} ${this.toSortDirection(orderOptions[key])}`;
+      })
+      .filter(Boolean);
+
+    return conditions.length ? `ORDER BY ${conditions.join(', ')}` : '';
+  }
+
+  private toSortDirection(direction: unknown) {
+    return String(direction).toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
   }
 
   private buildLimitClause(limitOptions: number) {

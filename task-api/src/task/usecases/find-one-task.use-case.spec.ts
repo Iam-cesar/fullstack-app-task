@@ -22,6 +22,12 @@ describe('FindOneTaskUseCase', () => {
         {
           provide: DataSource,
           useValue: {
+            getMetadata: jest.fn().mockReturnValue({
+              columns: [
+                { propertyName: 'id', databaseName: 'id' },
+                { propertyName: 'createdAt', databaseName: 'created_at' },
+              ],
+            }),
             createQueryRunner: jest.fn().mockReturnValue({
               connect: jest.fn(),
               query: jest.fn(),
@@ -53,6 +59,15 @@ describe('FindOneTaskUseCase', () => {
     jest.spyOn(queryRunner, 'query').mockResolvedValue([]);
 
     expect(await findOneTaskUseCase.execute(1)).toBeNull();
+  });
+
+  it('should select columns aliased to their entity property names', async () => {
+    const query = jest.spyOn(queryRunner, 'query').mockResolvedValue([]);
+
+    await findOneTaskUseCase.execute(1);
+
+    expect(query.mock.calls[0][0]).toContain('created_at AS "createdAt"');
+    expect(query.mock.calls[0][0]).not.toContain('SELECT *');
   });
 
   it('should throw an error if query fails', async () => {
