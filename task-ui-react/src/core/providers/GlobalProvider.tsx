@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactElement } from 'react';
 import { GlobalContext } from '../contexts/GlobalContext';
 import {
   IInitialGlobalProps,
@@ -7,7 +7,7 @@ import {
 import { initialGlobalState } from '../states/initialGlobalState';
 
 interface IGlobalContextProviderProps {
-  children: JSX.Element;
+  children: ReactElement;
 }
 export const GlobalContextProvider = ({
   children,

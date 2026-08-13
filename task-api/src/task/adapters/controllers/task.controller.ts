@@ -97,7 +97,7 @@ export class TaskController implements CRUD<Task> {
 
     try {
       return await this.findOneTaskUseCase.execute(+id);
-    } catch (error) {
+    } catch {
       throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
     }
   }
@@ -112,7 +112,7 @@ export class TaskController implements CRUD<Task> {
 
     try {
       return await this.createTaskUseCase.execute(input);
-    } catch (error) {
+    } catch {
       throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
     }
   }
@@ -123,7 +123,7 @@ export class TaskController implements CRUD<Task> {
 
     try {
       return await this.removeTaskUseCase.execute(+id);
-    } catch (error) {
+    } catch {
       throw new HttpException(`Task ${id} not found.`, HttpStatus.NOT_FOUND);
     }
   }

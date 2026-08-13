@@ -98,6 +98,7 @@ describe('TaskController', () => {
       const paginationModel: PageDto<Task> = {
         meta: undefined,
         data: result,
+        links: undefined,
       };
       jest
         .spyOn(findAllTaskUseCase, 'execute')

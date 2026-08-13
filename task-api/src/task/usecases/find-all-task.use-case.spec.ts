@@ -1,16 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Request } from 'express';
 import { DataSource, FindOptionsOrder } from 'typeorm';
 import { PageDto } from '../../core/dto/page.dto';
+import { PageLinkDto } from '../../core/dto/page-link.dto';
 import { PageMetaDto } from '../../core/dto/page-meta.dto';
-import { PageOptionsDto } from '../../core/dto/page-options.dto';
 import { Task } from '../entities/task.entity';
-import { TaskRepository } from '../persistence/task.repository';
 import { FindAllTaskUseCase } from './find-all-task.use-case';
 
 describe('FindAllTaskUseCase', () => {
   let findAllTaskUseCase: FindAllTaskUseCase;
-  let taskRepository: TaskRepository;
   let dataSource: DataSource;
 
   beforeEach(async () => {
@@ -37,7 +36,6 @@ describe('FindAllTaskUseCase', () => {
     }).compile();
 
     findAllTaskUseCase = module.get<FindAllTaskUseCase>(FindAllTaskUseCase);
-    taskRepository = module.get<TaskRepository>(getRepositoryToken(Task));
     dataSource = module.get<DataSource>(DataSource);
   });
 
@@ -49,20 +47,25 @@ describe('FindAllTaskUseCase', () => {
     const tasks = [new Task(), new Task()];
     const totalItems = 2;
     const params = {};
-    const pageOptionsDto = new PageOptionsDto<Task>(params);
+    const req = {
+      protocol: 'http',
+      baseUrl: '/task',
+      get: () => 'localhost:3000',
+    } as unknown as Request;
     const pageMetaDto = new PageMetaDto({
       items_count: totalItems,
       pageOptions: params,
     });
+    const pageLinkDto = new PageLinkDto(pageMetaDto, req);
 
     jest
       .spyOn(dataSource.createQueryRunner(), 'query')
       .mockResolvedValueOnce(tasks)
-      .mockResolvedValueOnce(totalItems);
+      .mockResolvedValueOnce([{ count: totalItems }]);
 
-    const result = await findAllTaskUseCase.execute(params);
+    const result = await findAllTaskUseCase.execute(params, req);
 
-    expect(result).toEqual(new PageDto(tasks, pageMetaDto));
+    expect(result).toEqual(new PageDto(tasks, pageMetaDto, pageLinkDto));
   });
 
   it('should build correct where clause', () => {

@@ -2,12 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource, QueryRunner } from 'typeorm';
 import { Task } from '../entities/task.entity';
-import { TaskRepository } from '../persistence/task.repository';
 import { FindOneTaskUseCase } from './find-one-task.use-case';
 
 describe('FindOneTaskUseCase', () => {
   let findOneTaskUseCase: FindOneTaskUseCase;
-  let taskRepository: TaskRepository;
   let dataSource: DataSource;
   let queryRunner: QueryRunner;
 
@@ -35,7 +33,6 @@ describe('FindOneTaskUseCase', () => {
     }).compile();
 
     findOneTaskUseCase = module.get<FindOneTaskUseCase>(FindOneTaskUseCase);
-    taskRepository = module.get<TaskRepository>(getRepositoryToken(Task));
     dataSource = module.get<DataSource>(DataSource);
     queryRunner = dataSource.createQueryRunner();
   });

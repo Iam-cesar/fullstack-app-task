@@ -1,7 +1,8 @@
+import { type ReactElement } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 
 interface IDroppableProps {
-  children: JSX.Element;
+  children: ReactElement;
   id: string;
 }
 const Droppable = (props: IDroppableProps) => {

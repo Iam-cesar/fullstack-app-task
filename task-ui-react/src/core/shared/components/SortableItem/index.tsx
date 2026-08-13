@@ -1,7 +1,8 @@
+import { type ReactElement } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 interface ISortableItemProps {
-  children: JSX.Element;
+  children: ReactElement;
   id: string;
 }
 const SortableItem = ({ children, id }: ISortableItemProps) => {

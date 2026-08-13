@@ -4,7 +4,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-
 } from 'typeorm';
 import { TaskEnumKeys, TaskEnumStatus } from './task.enum';
 

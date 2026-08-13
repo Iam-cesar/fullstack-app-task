@@ -1,8 +1,9 @@
+import { type ReactElement } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
 interface IDraggableProps {
-  children: JSX.Element;
+  children: ReactElement;
   id: string;
 }
 const Draggable = ({ children, id }: IDraggableProps) => {
