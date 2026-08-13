@@ -119,7 +119,7 @@ describe('FindAllTaskUseCase', () => {
       queryParams,
     );
 
-    expect(whereClause).toBe('WHERE title LIKE $1');
+    expect(whereClause).toBe('WHERE title ILIKE $1');
     expect(queryParams).toEqual(['%test%']);
   });
 
@@ -131,7 +131,7 @@ describe('FindAllTaskUseCase', () => {
       queryParams,
     );
 
-    expect(whereClause).toBe('WHERE title LIKE $1');
+    expect(whereClause).toBe('WHERE title ILIKE $1');
     expect(whereClause).not.toContain('DROP TABLE');
     expect(queryParams).toEqual([injection]);
   });

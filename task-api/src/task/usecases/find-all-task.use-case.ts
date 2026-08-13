@@ -88,7 +88,7 @@ export class FindAllTaskUseCase {
           option instanceof FindOperator ? option.value : option,
         );
 
-        return `${columnName} LIKE $${queryParams.length}`;
+        return `${columnName} ILIKE $${queryParams.length}`;
       })
       .filter(Boolean);
 
