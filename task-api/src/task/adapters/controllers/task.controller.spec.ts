@@ -1,5 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request } from 'express';
+import { Like } from 'typeorm';
 
 import { PageDto } from '../../../core/dto/page.dto';
 import { CreateTaskDto } from '../../../task/dto/create-task.dto';
@@ -107,6 +109,57 @@ describe('TaskController', () => {
       expect(await controller.findAll()).toBe(paginationModel);
     });
 
+    it('should forward pagination, search and ordering to the use case', async () => {
+      const req = {} as Request;
+      const execute = jest
+        .spyOn(findAllTaskUseCase, 'execute')
+        .mockResolvedValue({ meta: undefined, data: [], links: undefined });
+
+      await controller.findAll('10', '2', 'leite', 'title', 'ASC', req);
+
+      expect(execute).toHaveBeenCalledWith(
+        expect.objectContaining({
+          take: 10,
+          skip: 2,
+          where: { title: Like('%leite%') },
+          order: { title: 'ASC' },
+        }),
+        req,
+      );
+    });
+
+    it('should not filter when no search term is given', async () => {
+      const execute = jest
+        .spyOn(findAllTaskUseCase, 'execute')
+        .mockResolvedValue({ meta: undefined, data: [], links: undefined });
+
+      await controller.findAll();
+
+      expect(execute).toHaveBeenCalledWith(
+        expect.objectContaining({ where: {} }),
+        undefined,
+      );
+    });
+
+    it('should ignore an orderBy that is not an allowed column', async () => {
+      const execute = jest
+        .spyOn(findAllTaskUseCase, 'execute')
+        .mockResolvedValue({ meta: undefined, data: [], links: undefined });
+
+      await controller.findAll(
+        undefined,
+        undefined,
+        undefined,
+        'senha' as keyof Task,
+        'ASC',
+      );
+
+      expect(execute).toHaveBeenCalledWith(
+        expect.objectContaining({ order: {} }),
+        undefined,
+      );
+    });
+
     it('should throw an error if finding all tasks fails', async () => {
       jest.spyOn(findAllTaskUseCase, 'execute').mockRejectedValue(new Error());
 
@@ -163,10 +216,18 @@ describe('TaskController', () => {
       await expect(controller.update('abc', {})).rejects.toThrow(HttpException);
     });
 
+    it('should throw an error if the status is not a known one', async () => {
+      await expect(
+        controller.update('1', { status: 'SLEEPING' as TaskEnumStatus }),
+      ).rejects.toThrow(HttpException);
+    });
+
     it('should throw an error if update fails', async () => {
       jest.spyOn(createTaskUseCase, 'execute').mockRejectedValue(new Error());
 
-      await expect(controller.update('1', {})).rejects.toThrow(HttpException);
+      await expect(
+        controller.update('1', { status: TaskEnumStatus.PENDING }),
+      ).rejects.toThrow(HttpException);
     });
   });
 

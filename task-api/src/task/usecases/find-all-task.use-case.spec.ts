@@ -136,6 +136,26 @@ describe('FindAllTaskUseCase', () => {
     expect(queryParams).toEqual([injection]);
   });
 
+  it('should accept a plain value that is not wrapped in a FindOperator', () => {
+    const queryParams: unknown[] = [];
+    const whereClause = findAllTaskUseCase['buildWhereClause'](
+      { title: 'test' },
+      queryParams,
+    );
+
+    expect(whereClause).toBe('WHERE title ILIKE $1');
+    expect(queryParams).toEqual(['test']);
+  });
+
+  it('should return an empty where clause when there are no options', () => {
+    const queryParams: unknown[] = [];
+
+    expect(findAllTaskUseCase['buildWhereClause'](undefined, queryParams)).toBe(
+      '',
+    );
+    expect(queryParams).toEqual([]);
+  });
+
   it('should ignore where keys that are not entity columns', () => {
     const queryParams: unknown[] = [];
     const whereClause = findAllTaskUseCase['buildWhereClause'](
@@ -179,15 +199,27 @@ describe('FindAllTaskUseCase', () => {
     expect(orderClause).toBe('');
   });
 
+  it('should return an empty order clause when there are no options', () => {
+    expect(findAllTaskUseCase['buildOrderClause'](undefined)).toBe('');
+  });
+
   it('should build correct limit clause', () => {
     const limitOptions = 10;
     const limitClause = findAllTaskUseCase['buildLimitClause'](limitOptions);
     expect(limitClause).toBe('LIMIT 10');
   });
 
+  it('should omit the limit clause when there is no page size', () => {
+    expect(findAllTaskUseCase['buildLimitClause'](0)).toBe('');
+  });
+
   it('should build correct offset clause', () => {
     const offsetOptions = 5;
     const offsetClause = findAllTaskUseCase['buildOffsetClause'](offsetOptions);
     expect(offsetClause).toBe('OFFSET 5');
+  });
+
+  it('should omit the offset clause when starting from the first row', () => {
+    expect(findAllTaskUseCase['buildOffsetClause'](0)).toBe('');
   });
 });
